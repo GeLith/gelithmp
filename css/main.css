@@ -1,0 +1,347 @@
+
+body {
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Lucida, "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei", "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-image: url(https://ci.cncn3.cn/7147e1861cda53a6e7917cd8c71bd92f.jpg);
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: contain;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+}
+main .content {
+    display: under;
+    margin: 2em 1em;
+    background: rgba(255, 255, 255, 0.795);
+    text-align: left;
+    border-radius: 14px;
+    animation: left .5s 2.2s both;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+    overflow: hidden;
+    width: 38em;
+    height: 19em;
+    animation-name: fade-in-top;
+    animation-duration: 1.3s;
+    animation-timing-function: ease;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: none;
+    float:left;
+    
+  }
+  main .haoyou{
+    display: under;
+    margin: 2em 1em;
+    background: rgba(255, 255, 255, 0.795);
+    
+    border-radius: 14px;
+    animation: left .5s 2.2s both;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+    width: 38em;
+    height: 19em;
+    margin-left: 40em;
+    animation-name: fade-in-top;
+    animation-duration: 1.3s;
+    animation-timing-function: ease;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: none;
+
+  }
+  main .haoyouurl{
+    width: 38em;
+    height: 2em;
+    background: rgba(255, 255, 255, 0.795);
+    border-radius: 14px;
+    animation: left .5s 2.2s both;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+    animation-name: fade-in-top;
+    animation-duration: 1.3s;
+    animation-timing-function: ease;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: none;
+    float: right;
+    margin-top: -1em;
+    margin-right: 2em;
+  }
+  main .web a{
+    overflow: hidden;
+    margin-top: 1em;
+    margin-left: 1.2em;
+    text-align: right;
+    border-radius: 14px;
+    width: 11em;
+    height: 5em;
+    background: #f9b652;
+    float:left;
+    text-decoration: none;
+  }
+ 
+main .img{
+    margin-top: 1em;
+    margin-left: 0.5em;
+    border-radius: 100%;
+    text-align: left;
+    width: 3em;
+    height: 3em;
+    
+  }
+  .img img{
+    border-radius: 100%;
+    width: 3em;
+    height: 3em;
+  }
+  main .text{
+   word-wrap: break-word;
+   word-break: break-all;
+    margin-top: -3em;
+    margin-left: 3.5em;
+    text-align: center;
+    width: 7em;
+    height: 5em;
+    color: aliceblue;
+  }
+  
+  @keyframes fade-in-top {
+    0%{
+      -webkit-transform: translateY(-50px);
+      transform: translateY(-50px);
+      opacity: 0;
+    }
+    100%{
+      -webkit-transform: translateY(0);
+      transform: translateY(0);
+      opacity: 1;
+    }
+}
+
+main .logo{
+  width: 8em;
+  height: 8em;
+    border-radius: 100%;
+    margin-left: 1.9em;
+    margin-top: 1.9em;
+}
+.logo img{
+  width: 8em;
+  height: 8em;
+    border-radius: 100%;
+    
+}
+main .icon{
+    margin-left: 1em;
+    display: flex;
+    justify-self: space-between;
+    width: 8em;
+    height: 3em;
+}
+
+.icon :hover svg{
+    border-radius: 14px;
+    margin-left: 1em;
+    width: 8em;
+    height: 3em;
+    box-shadow: 0 0 25px rgba(0, 0, 0, .2);
+    animation-name: scale-up-center;
+    animation-duration: 0.8s;
+  animation-timing-function: ease;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: none;
+}
+@keyframes scale-up-center {
+  0%{
+    -webkit-transform: scale(.2);
+    transform: scale(.2);
+  }
+  100%{
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+main .wenbeng{
+
+    margin-top: -9em;
+    margin-left: 10em;
+    width: 28em;
+    height: 3em;
+}
+.wenbeng h1{
+    text-align: center;
+    font-family: 'sans-serif';
+    font-size: 2.35em;
+    color: 'blank';
+}
+.wenbeng h2{
+    margin-top: -0.5em;
+    margin-left: -0.5em;
+    text-align: center;
+    font-size: 1.5em;
+    font-family:'sans-serif';
+    color: rgb(124, 121, 121);
+}
+.lxfs {
+    margin-top: 5em;
+    margin-bottom: 2em;
+    background: rgb(49, 51, 49);
+    width: 38em;
+    height: 0.2em;
+    vertical-align: under;
+}
+.lxfs h1{
+    font-size: 1.25em;
+    font-family: '微软黑体';
+    text-align: center;
+}
+main .new{
+  text-align: center;
+ width: 38em;
+ height: 7em;
+}
+.new a{
+  margin-top: 0.5em;
+  font-size: 125%;
+  background-image: -webkit-linear-gradient(left, #3498db, #f47920 10%, #d71345 20%, #f7acbc 30%,
+            #ffd400 40%, #3498db 50%, #f47920 60%, #d71345 70%, #f7acbc 80%, #ffd400 90%, #3498db);
+            color: transparent; /*文字填充色为透明*/
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;          /*背景剪裁为文字，只将文字显示为背景*/
+            background-size: 200% 100%;            /*背景图片向水平方向扩大一倍，这样background-position才有移动与变化的空间*/
+            /* 动画 */
+            animation: masked-animation 4s infinite linear;
+        }
+        @keyframes masked-animation {
+            0% {
+                background-position: 0 0;   /*background-position 属性设置背景图像的起始位置。*/
+            }
+            100% {
+                background-position: -100% 0;
+            }
+
+}
+@media only screen and (max-width: 762px){
+    main .content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        display: block;
+        text-align:center;
+        width: 100%;
+        max-height: 50em;
+        width: 20em;
+        height: 49em;
+        animation-name: fade-in-top;
+  animation-duration: 1.3s;
+  animation-timing-function: ease;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: none;
+  
+}
+main .haoyou {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  display: block;
+  width: 100%;
+  max-height: 60em;
+  width: 20em;
+  height: 57em;
+  animation-name: fade-in-top;
+animation-duration: 1.3s;
+animation-timing-function: ease;
+animation-delay: 0s;
+animation-iteration-count: 1;
+animation-direction: normal;
+animation-fill-mode: none;
+margin-top: 52em;
+margin-left: 1em;
+}
+main .web {
+
+  margin-left: 3.2em;
+}
+@keyframes fade-in-top {
+  0%{
+    -webkit-transform: translateY(-50px);
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100%{
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+    }
+    .logo img{
+      
+        margin-left: 3.5em;
+    }
+    main .wenbeng {
+        text-align:center;
+        margin-top: 2em;
+        margin-left:0em ;
+        width: 20em;
+        height: 5em;
+    }
+    .wenbeng h2{
+        margin-left: 0.8em;
+    }
+    .lxfs{
+        margin-top: 6em;
+        width: 20em;
+        height: 0.2em;
+    }
+    main .new{
+      text-align: center;
+      width: 18em;
+      margin-left: 1em;
+     margin-top: 15.9em;
+     
+    }
+    main .icon  {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 AUTo;
+        margin-top: 1em;
+        height: 4em;
+    }
+    .icon :hover svg{
+        border-radius: 14px;
+        margin-right: 1em;
+        width: 6em;
+        height: 4em;
+        box-shadow: 0 0 25px rgba(0, 0, 0, .2);
+        animation-name: scale-up-center;
+    animation-duration: 0.8s;
+  animation-timing-function: ease;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: none;
+}
+
+@keyframes scale-up-center {
+  0%{
+    -webkit-transform: scale(.2);
+    transform: scale(.2);
+  }
+  100%{
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+    }
+}

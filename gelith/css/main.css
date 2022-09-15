@@ -1,0 +1,332 @@
+
+body {
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Lucida, "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei", "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-image: url(https://ci.cncn3.cn/998e917e5992f545272b3cd573730566.jpg);
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: contain;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+}
+main .content {
+    display: under;
+    margin: 2em 1em;
+    text-align: content;
+    animation: content .5s 2.2s both;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+    overflow: hidden;
+    width: 38em;
+    height: 18em;
+    transform: skew(-12deg);
+}
+main .leftbox{
+  background: rgba(27, 26, 26, 0.795);
+  text-align: left;
+  margin-top: -1.9em;
+  width: 10em;
+  height: 18em;
+  
+  animation-name: tilt-in-right-1;
+  animation-duration: 1.3s;
+  animation-timing-function: ease;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: none;
+}
+@keyframes tilt-in-right-1 {
+  0%{
+    transform: rotateX(-30deg) translateX(300px) skewX(0deg);
+    opacity: 0;
+  }
+  100%{
+    transform: rotateX(0deg) translateX(0) skewX(0deg);
+    opacity: 1;
+  }
+}
+
+  main .rightbox {
+    background: rgba(235, 234, 234, 0.795);
+    text-align: right;
+    animation: content .5s 2.2s both;
+    overflow: hidden;
+    width: 28em;
+    height: 18em;
+    margin-top: -20em;
+    margin-left: 11em;
+    transform: skew(-12deg);
+  
+    animation-name: tilt-in-right-2;
+  animation-duration: 1.5s;
+  animation-timing-function: ease;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: none;
+}
+@keyframes tilt-in-right-2 {
+  0%{
+    transform: rotateX(-30deg) translateX(300px) skewX(-12deg);
+    opacity: 0;
+  }
+  100%{
+    transform: rotateX(0deg) translateX(0) skewX(-12deg);
+    opacity: 1;
+  }
+}
+
+main .logo{
+    border-radius: 100%;
+    margin-left: 1.5em;
+    margin-top: 1.9em;
+    transform: skew(12deg);
+}
+.logo img{
+  margin-top: 1.3em;
+  border-radius: 100%;
+  margin-left: 0.5em;
+    
+}
+.logo h2{
+  color: aliceblue;
+  margin-left: 0.45em;
+  
+}
+.logo h3{
+  color: aliceblue;
+  margin-left: -4.8em;
+  margin-top: 5.5em;
+font-size:  50%;
+}
+.logo h4{
+  
+  color: aliceblue;
+  margin-left: 0em;
+  margin-top: -0.9em;
+font-size:  50%;
+}
+main .icon{
+    margin-left: 0.005px;
+    display: flex;
+    justify-self: space-between;
+    width: 6em;
+    height: 3em;
+    margin-left: -0.6em;
+    margin-top: 1em;
+    animation-name: tilt-in-right-3;
+    animation-duration: 1.9s;
+    animation-timing-function: ease;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: none;
+}
+@keyframes tilt-in-right-3 {
+  0%{
+    transform: rotateX(30deg) translateX(300px) skewX(0deg);
+    opacity: 0;
+    
+  }
+  100%{
+    transform: rotateX(0deg) translateX(0) skewX(0deg);
+    opacity: 1;
+    
+  }
+}
+
+.icon a{
+  margin-left: 2.6em;
+  margin-top: 1em;
+  width: 4em;
+  height: 10em;
+  background: rgba(27, 26, 26, 0.795)
+}
+.icon svg{
+  margin-left: -1em;
+  margin-top: 3.1em;
+  text-align: center;
+  animation-name: tilt-in-right-4;
+  animation-duration: 0.5s;
+  animation-timing-function: ease;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: none;
+  transform: skew(12deg);
+}
+@keyframes tilt-in-right-4 {
+  0%{
+    transform: rotateX(30deg) translateX(300px) skewX(0deg);
+    opacity: 0;
+  
+  }
+  100%{
+    transform: rotateX(0deg) translateX(0) skewX(0deg);
+    opacity: 1;
+    
+  }
+}
+.icon :hover a{
+  
+z-index:9999;
+   background: greenyellow;
+   transform: skew(0deg);
+   margin-top: 0em;
+    margin-left: 4em;
+    width: 9em;
+    height: 10em;
+    box-shadow: 0 0 25px rgba(0, 0, 0, .2);
+}
+.icon :hover hideShita {
+  transform: skew(0deg);
+  margin-top: 0em;
+   margin-left: 4em;
+   width: 9em;
+   height: 10em;
+   box-shadow: 0 0 25px rgba(0, 0, 0, .2);
+  transition: max-height 0.5s;
+}
+ 
+.icon :hover element {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s;
+}
+
+main .wenbeng{
+    margin-top: 0em;
+    margin-left: 0em;
+    width: 28em;
+    height: 3em;
+}
+.wenbeng h1{
+    text-align: center;
+    font-family: 'sans-serif';
+    font-size:2em;
+    color: 'blank';
+    margin-left: 0.6em;
+}
+.wenbeng h2{
+    margin-top: -0.5em;
+    margin-left: -0.5em;
+    text-align: center;
+    font-size: 1.5em;
+    font-family:'sans-serif';
+    background-image: -webkit-linear-gradient(left, #3498db, #f47920 10%, #d71345 20%, #f7acbc 30%,
+            #ffd400 40%, #3498db 50%, #f47920 60%, #d71345 70%, #f7acbc 80%, #ffd400 90%, #3498db);
+            color: transparent; /*文字填充色为透明*/
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;          /*背景剪裁为文字，只将文字显示为背景*/
+            background-size: 200% 100%;            /*背景图片向水平方向扩大一倍，这样background-position才有移动与变化的空间*/
+            /* 动画 */
+            animation: masked-animation 4s infinite linear;
+        }
+        @keyframes masked-animation {
+            0% {
+                background-position: 0 0;   /*background-position 属性设置背景图像的起始位置。*/
+            }
+            100% {
+                background-position: -100% 0;
+            }
+}
+.lxfs {
+    margin-top: 5em;
+    margin-bottom: 2em;
+    background: rgb(49, 51, 49);
+    width: 38em;
+    height: 0.2em;
+    vertical-align: under;
+}
+.lxfs h1{
+    font-size: 1.25em;
+    font-family: '微软黑体';
+    text-align: center;
+}
+@media only screen and (max-width: 762px){
+    main .content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        display: block;
+        text-align:center;
+        width: 100%;
+        max-height: 50em;
+        width: 20em;
+        height: 48em;
+        animation-name: fade-in-top;
+  animation-duration: 1.3s;
+  animation-timing-function: ease;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: none;
+}
+@keyframes fade-in-top {
+  0%{
+    -webkit-transform: translateY(-50px);
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100%{
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+    }
+    .logo img{
+        margin-left: -1em;
+    }
+    main .wenbeng {
+        text-align:center;
+        margin-top: 2em;
+        margin-left:0em ;
+        width: 20em;
+        height: 5em;
+    }
+    .wenbeng h2{
+        margin-left: 0.8em;
+    }
+    .lxfs{
+        margin-top: 6em;
+        width: 20em;
+        height: 0.2em;
+    }
+    main .icon  {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 AUTo;
+        margin-top: 1em;
+        height: 4em;
+    }
+    .icon :hover svg{
+        border-radius: 14px;
+        margin-right: 1em;
+        width: 6em;
+        height: 4em;
+        box-shadow: 0 0 25px rgba(0, 0, 0, .2);
+        animation-name: scale-up-center;
+    animation-duration: 0.8s;
+  animation-timing-function: ease;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: none;
+}
+@keyframes scale-up-center {
+  0%{
+    -webkit-transform: scale(.2);
+    transform: scale(.2);
+  }
+  100%{
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+    }
+}
