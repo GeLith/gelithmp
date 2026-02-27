@@ -1,0 +1,16 @@
+
+body {
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Lucida, "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei", "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-image: url(https://ci.cncn3.cn/7147e1861cda53a6e7917cd8c71bd92f.jpg);
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: contain;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+}

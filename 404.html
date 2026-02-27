@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>404 - 页面未找到 | 洞洞的站点</title>
+    <link href="css/main.css" rel="stylesheet">
+    <style>
+        /* 404页面特定样式 */
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .error-card {
+            width: 90%;
+            max-width: 800px;
+            height: auto;
+            min-height: 500px;
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            animation: 
+                fade-in-top 1.3s ease 0s 1 normal none,
+                float 6s ease-in-out 1.3s infinite;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .error-number {
+            font-size: 12rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            line-height: 1;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .error-number::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+            border-radius: 2px;
+        }
+        
+        .error-title {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 30px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            font-weight: 600;
+        }
+        
+        .error-message {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 40px;
+            max-width: 600px;
+            line-height: 1.6;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .error-actions {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .error-button {
+            padding: 14px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .error-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+            z-index: -1;
+        }
+        
+        .error-button:hover::before {
+            left: 100%;
+        }
+        
+        .error-button-primary {
+            background: rgba(120, 119, 198, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 10px 20px rgba(120, 119, 198, 0.3);
+        }
+        
+        .error-button-primary:hover {
+            background: rgba(120, 119, 198, 0.9);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(120, 119, 198, 0.4);
+        }
+        
+        .error-button-secondary {
+            background: rgba(249, 182, 82, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 10px 20px rgba(249, 182, 82, 0.3);
+        }
+        
+        .error-button-secondary:hover {
+            background: rgba(249, 182, 82, 0.9);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(249, 182, 82, 0.4);
+        }
+        
+        .error-icon {
+            font-size: 1.5rem;
+            display: inline-block;
+        }
+        
+        .error-illustration {
+            width: 300px;
+            height: 200px;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .error-illustration::before {
+            content: '404';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.05);
+            z-index: 0;
+        }
+        
+        .error-illustration svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+            position: relative;
+            z-index: 1;
+        }
+        
+        .error-search {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .search-box {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            overflow: hidden;
+            padding: 5px;
+        }
+        
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 15px 20px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .search-button {
+            background: rgba(120, 119, 198, 0.7);
+            border: none;
+            color: white;
+            padding: 0 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .search-button:hover {
+            background: rgba(120, 119, 198, 0.9);
+        }
+        
+        /* 移动端适配 */
+        @media only screen and (max-width: 762px) {
+            .error-card {
+                padding: 30px 20px;
+                min-height: 400px;
+            }
+            
+            .error-number {
+                font-size: 8rem;
+            }
+            
+            .error-title {
+                font-size: 2rem;
+            }
+            
+            .error-message {
+                font-size: 1rem;
+                padding: 0 10px;
+            }
+            
+            .error-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .error-button {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .error-illustration {
+                width: 250px;
+                height: 150px;
+            }
+            
+            .error-illustration::before {
+                font-size: 7rem;
+            }
+        }
+        
+        /* 夜间模式适配 */
+        body.night-mode .error-button-primary {
+            background: rgba(80, 70, 140, 0.7);
+        }
+        
+        body.night-mode .error-button-secondary {
+            background: rgba(180, 130, 50, 0.7);
+        }
+        
+        body.night-mode .search-button {
+            background: rgba(80, 70, 140, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <!-- 主题切换按钮 -->
+    <div class="theme-toggle" id="themeToggle">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12,18C8.68629,18 6,15.3137 6,12C6,8.68629 8.68629,6 12,6C15.3137,6 18,8.68629 18,12C18,15.3137 15.3137,18 12,18ZM12,16C14.2091,16 16,14.2091 16,12C16,9.79086 14.2091,8 12,8C9.79086,8 8,9.79086 8,12C8,14.2091 9.79086,16 12,16ZM11,1H13V4H11V1ZM11,20H13V23H11V20ZM3.51472,4.92893L4.92893,3.51472L7.05025,5.63604L5.63604,7.05025L3.51472,4.92893ZM16.9497,18.364L18.364,16.9497L20.4853,19.0711L19.0711,20.4853L16.9497,18.364ZM19.0711,3.51472L20.4853,4.92893L18.364,7.05025L16.9497,5.63604L19.0711,3.51472ZM5.63604,16.9497L7.05025,18.364L4.92893,20.4853L3.51472,19.0711L5.63604,16.9497ZM23,11V13H20V11H23ZM4,11V13H1V11H4Z"></path>
+        </svg>
+    </div>
+    
+    <!-- 主内容区域 -->
+    <main class="error-container">
+        <div class="card error-card">
+            <div class="error-number">404</div>
+            
+            <div class="error-title">哎呀！页面走丢了</div>
+            
+            <div class="error-message">
+                您访问的页面可能已经被移动、删除或暂时不可用。别担心，这就像在数字海洋中迷路的小船，我们会帮您找到正确的方向。
+            </div>
+            
+           
+            
+            <div class="error-actions">
+                <a href="index.html" class="error-button error-button-primary">
+                    <span class="error-icon">🏠</span>
+                    <span>返回首页</span>
+                </a>
+                
+                <a href="javascript:history.back()" class="error-button error-button-secondary">
+                    <span class="error-icon">↩️</span>
+                    <span>返回上一页</span>
+                </a>
+            </div>
+            
+            <div class="error-search">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="在站内搜索您想要的内容...">
+                    <button class="search-button">
+                        <span>搜索</span>
+                        <span>🔍</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- 粒子效果容器 -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- 鼠标跟随效果 -->
+    <div class="mouse-follower" id="mouseFollower"></div>
+    
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // 检查本地存储的主题设置
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'night') {
+            body.classList.add('night-mode');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('night-mode');
+            
+            // 保存主题设置到本地存储
+            if (body.classList.contains('night-mode')) {
+                localStorage.setItem('theme', 'night');
+            } else {
+                localStorage.setItem('theme', 'day');
+            }
+        });
+        
+        // 鼠标跟随效果
+        const mouseFollower = document.getElementById('mouseFollower');
+        let mouseX = 0, mouseY = 0;
+        let followerX = 0, followerY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function animateFollower() {
+            followerX += (mouseX - followerX) * 0.1;
+            followerY += (mouseY - followerY) * 0.1;
+            
+            mouseFollower.style.left = followerX + 'px';
+            mouseFollower.style.top = followerY + 'px';
+            
+            requestAnimationFrame(animateFollower);
+        }
+        
+        animateFollower();
+        
+        // 粒子效果
+        const particlesContainer = document.getElementById('particles');
+        
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // 随机大小
+            const size = Math.random() * 5 + 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            
+            // 随机位置
+            particle.style.left = Math.random() * 100 + 'vw';
+            
+            // 随机颜色
+            const colors = [
+                'rgba(255, 255, 255, 0.5)',
+                'rgba(120, 119, 198, 0.4)',
+                'rgba(255, 200, 124, 0.4)',
+                'rgba(100, 210, 255, 0.4)'
+            ];
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            // 随机动画时长
+            const duration = Math.random() * 20 + 10;
+            particle.style.animationDuration = duration + 's';
+            
+            // 随机动画延迟
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            
+            particlesContainer.appendChild(particle);
+            
+            // 动画结束后移除粒子
+            setTimeout(() => {
+                particle.remove();
+            }, duration * 1000);
+        }
+        
+        // 初始创建一些粒子
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => createParticle(), i * 300);
+        }
+        
+        // 定期创建新粒子
+        setInterval(createParticle, 500);
+        
+        // 搜索功能
+        const searchInput = document.querySelector('.search-input');
+        const searchButton = document.querySelector('.search-button');
+        
+        searchButton.addEventListener('click', () => {
+            const query = searchInput.value.trim();
+            if (query) {
+                alert(`搜索功能演示: 您正在搜索 "${query}"\n\n在实际站点中，这里将跳转到搜索结果页面。`);
+                searchInput.value = '';
+            } else {
+                alert('请输入搜索关键词');
+            }
+        });
+        
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchButton.click();
+            }
+        });
+        
+        // 页面加载动画
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '1';
+        });
+        
+        document.body.style.opacity = '0';
+        document.body.style.transition = 'opacity 0.5s ease';
+        setTimeout(() => {
+            document.body.style.opacity = '1';
+        }, 100);
+    </script>
+</body>
+</html>
