@@ -174,7 +174,7 @@ main {
 }
 
 .col-intro {
-    flex: 0 0 12em;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -184,7 +184,7 @@ main {
 }
 
 .col-tools {
-    flex: 0 0 14em;
+    flex: 1;
     display: flex;
     flex-direction: column;
     padding: 0 2em;
