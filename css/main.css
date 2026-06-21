@@ -154,26 +154,122 @@ body {
 }
 
 /* ==================== 具体卡片样式 ==================== */
+main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5em;
+    width: 100%;
+    padding: 2em 1em;
+}
+
 .main-card {
     display: block;
-    margin: 2em auto;
     border-radius: 20px;
-    width: 38em;
-    height: 19em;
-    float: left;
+    width: 42em;
+    padding: 2em;
     opacity: 0;
     animation: fade-in 1s ease 0s forwards;
 }
 
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
+}
+
+.tool-card {
+    display: block;
+    border-radius: 16px;
+    width: 22em;
+    padding: 1.2em 1.5em;
+    opacity: 0;
+    animation: fade-in 1s ease 0.15s forwards;
+}
+
 .friend-card {
     display: block;
-    margin: 2em auto;
-    border-radius: 20px;
-    width: 38em;
-    height: 19em;
-    margin-left: 40em;
+    border-radius: 16px;
+    width: 22em;
+    height: 20em;
     opacity: 0;
     animation: fade-in 1s ease 0.2s forwards;
+    overflow: hidden;
+}
+
+.tool-header {
+    text-align: center;
+    margin-bottom: 1.2em;
+}
+
+.tool-header h3 {
+    font-size: 1.5em;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin: 0;
+}
+
+.tool-header p {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0.3em 0 0 0;
+}
+
+.tool-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1em;
+}
+
+.tool-item {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    padding: 1em 1.5em;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(51, 122, 183, 0.4) 0%, rgba(40, 96, 144, 0.25) 100%);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    min-width: 14em;
+}
+
+.tool-item:hover {
+    transform: translateY(-5px) scale(1.03);
+    background: linear-gradient(135deg, rgba(51, 122, 183, 0.55) 0%, rgba(40, 96, 144, 0.4) 100%);
+    box-shadow: 0 12px 30px rgba(51, 122, 183, 0.3);
+}
+
+.tool-icon {
+    font-size: 2.5em;
+    width: 2.5em;
+    height: 2.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+}
+
+.tool-info {
+    text-align: left;
+}
+
+.tool-name {
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.tool-desc {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85em;
+    margin-top: 0.2em;
 }
 
 @keyframes fade-in {
@@ -184,12 +280,12 @@ body {
 /* ==================== 黄色卡片样式 ==================== */
 .yellow-card {
     overflow: hidden;
-    margin-top: 1em;
-    margin-left: 1.2em;
+    margin-top: 0.8em;
+    margin-left: 0.8em;
     text-align: right;
-    border-radius: 18px;
-    width: 11em;
-    height: 5em;
+    border-radius: 12px;
+    width: 9.2em;
+    height: 4.5em;
     background: linear-gradient(135deg, rgba(249, 182, 82, 0.35) 0%, rgba(249, 200, 100, 0.2) 50%, rgba(249, 182, 82, 0.35) 100%);
     backdrop-filter: blur(30px) saturate(160%) brightness(1.05);
     -webkit-backdrop-filter: blur(30px) saturate(160%) brightness(1.05);
@@ -250,12 +346,12 @@ body {
 
 /* ==================== 头像和文字样式 ==================== */
 .avatar {
-    margin-top: 1em;
+    margin-top: 0.8em;
     margin-left: 0.5em;
     border-radius: 100%;
     text-align: left;
-    width: 3em;
-    height: 3em;
+    width: 2.5em;
+    height: 2.5em;
     transition: transform 0.5s ease;
     float: left;
 }
@@ -266,8 +362,8 @@ body {
 
 .avatar img {
     border-radius: 100%;
-    width: 3em;
-    height: 3em;
+    width: 2.5em;
+    height: 2.5em;
     transition: all 0.5s ease;
     display: block;
 }
@@ -279,12 +375,13 @@ body {
 .card-text {
     word-wrap: break-word;
     word-break: break-all;
-    margin-top: -3em;
-    margin-left: 3.5em;
+    margin-top: -2.5em;
+    margin-left: 3em;
     text-align: center;
-    width: 7em;
-    height: 5em;
+    width: 5.5em;
+    height: 4.5em;
     color: aliceblue;
+    font-size: 0.85em;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     float: left;
 }
@@ -294,8 +391,8 @@ body {
     display: block;
     width: 100%;
     text-align: center;
-    margin: 2em auto 1em;
-    padding: 1em 0;
+    margin: 0.5em auto 1em;
+    padding: 0.5em 0;
     height: auto;
     clear: both;
 }
@@ -348,12 +445,59 @@ body {
     100% { opacity: 1; transform: translateY(0); }
 }
 
+/* ==================== 区块标题 ==================== */
+.section-title {
+    font-size: 1.1em;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 1.2em 0 0.8em;
+    padding-left: 0.3em;
+    text-align: left;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ==================== 卡片内友链 ==================== */
+.friend-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    padding: 0.5em 0;
+    justify-content: flex-start;
+}
+
+.friend-links .friend-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.5em 1em;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.friend-links .friend-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.friend-links .friend-link img {
+    width: 1.6em;
+    height: 1.6em;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 /* ==================== 分隔线 ==================== */
 .divider {
-    margin: 0em auto;
-    background: linear-gradient(90deg, transparent, rgba(49, 51, 49, 0.7), transparent);
-    width: 38em;
-    height: 0.3em;
+    margin: 0.8em auto;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    width: 100%;
+    height: 1px;
     position: relative;
     overflow: hidden;
     clear: both;
@@ -534,6 +678,25 @@ body.night-mode {
     border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
+.night-mode .tool-item {
+    background: linear-gradient(135deg, rgba(40, 70, 110, 0.4) 0%, rgba(30, 50, 80, 0.25) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.night-mode .section-title {
+    color: #d0d0e8;
+}
+
+.night-mode .friend-links .friend-link {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #d0d0e8;
+}
+
+.night-mode .friend-links .friend-link:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
 .night-mode .header h1 {
     color: #e8e8ff;
 }
@@ -591,23 +754,15 @@ body.night-mode {
         padding: 0.5em;
     }
 
-    .main-card, .friend-card {
+    .main-card {
         width: 100%;
-        max-width: 100%;
-        margin: 1em auto;
-        float: none;
-        height: auto;
-        min-height: 19em;
-    }
-
-    .friend-card {
-        margin-left: auto;
-        margin-right: auto;
+        padding: 1em;
+        min-height: auto;
     }
 
     .icons {
         gap: 0.8em;
-        margin: 1.5em auto;
+        margin: 1em auto;
     }
 
     .icon-link {
@@ -624,65 +779,8 @@ body.night-mode {
         height: 1.5em;
     }
 
-    .yellow-card-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        width: 100%;
-        margin: 1em 0;
-        gap: 0.5em;
-    }
-
-    .yellow-card {
-        margin: 0;
-        float: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: calc(50% - 0.5em);
-        height: 5em;
-        text-align: center;
-        color: white;
-        text-decoration: none;
-        font-weight: bold;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        padding: 0.5em;
-    }
-
-    .yellow-card span {
-        display: block;
-        width: 100%;
-        text-align: center;
-        color: white !important;
-        font-weight: bold;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
-        line-height: 1.3;
-        padding: 0.5em;
-    }
-
-    .avatar {
-        display: block;
-        margin: 1em auto !important;
-        text-align: center;
-        float: none !important;
-    }
-
-    .avatar img {
-        display: block;
-        margin: 0 auto;
-    }
-
-    .card-text {
-        display: block;
-        margin: 0.5em auto !important;
-        text-align: center;
-        width: 100% !important;
-        height: auto;
-        float: none;
-    }
-
     .header {
-        margin: 1em auto;
+        margin: 0.5em auto;
         width: 100%;
     }
 
@@ -696,21 +794,20 @@ body.night-mode {
 
     .divider {
         width: 100%;
-        margin: 2em auto;
+        margin: 1em auto;
     }
 
-    .yellow-card:hover {
-        transform: scale(1.05) translateY(-3px);
-        box-shadow: 0 10px 20px rgba(249, 182, 82, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 rgba(0, 0, 0, 0.25), 0 0 20px rgba(249, 182, 82, 0.3);
+    .section-title {
+        font-size: 1em;
     }
 
-    .main-card {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 1em;
+    .friend-links {
+        gap: 0.6em;
+    }
+
+    .friend-links .friend-link {
+        padding: 0.4em 0.8em;
+        font-size: 0.85em;
     }
 
     .theme-toggle {
