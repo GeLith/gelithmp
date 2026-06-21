@@ -9,10 +9,18 @@
     <style>
         body {
             background:
-                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(51, 122, 183, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(92, 184, 92, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.35) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(51, 122, 183, 0.35) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(92, 184, 92, 0.2) 0%, transparent 50%),
                 linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-size: 200% 200%;
+            animation: gradient-shift 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .page-wrap {
@@ -24,9 +32,12 @@
             gap: 2em;
         }
 
-        .hero-card {
+        .s-card {
             max-width: 800px;
             width: 100%;
+        }
+
+        .hero-card {
             text-align: center;
             padding: 4em 3em;
         }
@@ -108,9 +119,18 @@
             border-color: rgba(255, 255, 255, 0.4);
         }
 
+        .btn-green {
+            background: linear-gradient(135deg, #5cb85c, #449d44);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(92, 184, 92, 0.4);
+        }
+
+        .btn-green:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(92, 184, 92, 0.6);
+        }
+
         .section-card {
-            max-width: 900px;
-            width: 100%;
             padding: 3em;
         }
 
@@ -184,7 +204,7 @@
             border-color: rgba(51, 122, 183, 0.4);
         }
 
-        .step-num {
+        .demo-step .step-num {
             width: 44px;
             height: 44px;
             background: linear-gradient(135deg, #337ab7, #286090);
@@ -212,7 +232,6 @@
 
         .shortcut-box {
             text-align: center;
-            padding: 1em 0;
         }
 
         .shortcut-box p {
@@ -229,6 +248,119 @@
             font-size: 1.5em;
             font-family: monospace;
             color: #5cb85c;
+        }
+
+        .dl-row {
+            display: flex;
+            gap: 1em;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2em;
+        }
+
+        .method-tabs {
+            display: flex;
+            gap: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        .method-tab {
+            flex: 1;
+            padding: 1em;
+            text-align: center;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .method-tab.active {
+            background: rgba(51, 122, 183, 0.2);
+            border-color: rgba(51, 122, 183, 0.5);
+            color: #fff;
+        }
+
+        .method-tab h3 {
+            font-size: 1em;
+            margin-bottom: 0.3em;
+        }
+
+        .method-tab p {
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #5cb85c;
+            color: #fff;
+            font-size: 0.7em;
+            padding: 0.15em 0.6em;
+            border-radius: 10px;
+            margin-left: 0.4em;
+        }
+
+        .install-steps {
+            display: block;
+        }
+
+        .install-steps.hidden {
+            display: none;
+        }
+
+        .step {
+            display: flex;
+            gap: 1em;
+            margin-bottom: 1.2em;
+            align-items: flex-start;
+        }
+
+        .step .step-num {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            background: linear-gradient(135deg, #337ab7, #286090);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #fff;
+            font-size: 0.9em;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            color: #fff;
+            font-size: 1em;
+            margin-bottom: 0.3em;
+        }
+
+        .step-content p {
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+
+        .step-content code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.15em 0.5em;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .tip-box {
+            background: rgba(250, 173, 20, 0.08);
+            border: 1px solid rgba(250, 173, 20, 0.2);
+            border-radius: 12px;
+            padding: 1em 1.2em;
+            margin-top: 1.5em;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 0.85em;
+            line-height: 1.6;
         }
 
         .footer-links {
@@ -255,6 +387,8 @@
             .hero-card { padding: 2em 1.5em; }
             .section-card { padding: 2em 1.5em; }
             .btn-row { flex-direction: column; align-items: center; }
+            .method-tabs { flex-direction: column; }
+            .dl-row { flex-direction: column; }
         }
     </style>
 </head>
@@ -263,17 +397,105 @@
 <div class="particles" id="particles"></div>
 
 <div class="page-wrap">
-    <div class="card hero-card">
+    <div class="card s-card hero-card">
         <div class="ball-icon">⌨</div>
         <div class="hero-title">键盘输入模拟器</div>
         <div class="hero-desc">有些网页不支持粘贴？没关系。输入文字，点击开始，<br>自动帮你一个一个敲进去。</div>
         <div class="btn-row">
-            <a class="btn btn-primary" href="install.html">📖 安装教程</a>
+            <a class="btn btn-green" href="https://github.com/GeLith/keyboard-simulator-web/releases/download/v1.1.0/keyboard-simulator.crx" download="keyboard-simulator.crx">⬇ 下载插件</a>
             <a class="btn btn-outline" href="https://github.com/GeLith/keyboard-simulator-web" target="_blank">GitHub</a>
         </div>
     </div>
 
-    <div class="card section-card">
+    <div class="card s-card section-card" id="install">
+        <div class="section-title">安装教程</div>
+        <div class="dl-row">
+            <a class="btn btn-green" href="https://github.com/GeLith/keyboard-simulator-web/releases/download/v1.1.0/keyboard-simulator.crx" download="keyboard-simulator.crx">⬇ 下载 .crx（推荐）</a>
+            <a class="btn btn-primary" href="https://github.com/GeLith/keyboard-simulator-web/archive/refs/heads/main.zip" download="keyboard-simulator.zip">⬇ 下载 .zip</a>
+        </div>
+
+        <div class="method-tabs">
+            <div class="method-tab active" data-method="crx">
+                <h3>拖拽安装 <span class="badge">推荐</span></h3>
+                <p>下载 .crx 文件，直接拖到扩展管理页面</p>
+            </div>
+            <div class="method-tab" data-method="unpacked">
+                <h3>解压安装</h3>
+                <p>下载源代码解压，通过加载已解压的扩展程序安装</p>
+            </div>
+        </div>
+
+        <div class="install-steps" id="steps-crx">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h4>下载 .crx 文件</h4>
+                    <p>点击上方绿色按钮下载 <code>keyboard-simulator.crx</code></p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h4>打开扩展管理页面</h4>
+                    <p><strong>Chrome：</strong>地址栏输入 <code>chrome://extensions/</code> 回车，开启右上角「开发者模式」</p>
+                    <p><strong>Edge：</strong>地址栏输入 <code>edge://extensions/</code> 回车，开启左下角「开发人员模式」</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h4>拖拽安装</h4>
+                    <p>将 .crx 文件直接拖入扩展管理页面，点击「添加扩展程序」确认</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="install-steps hidden" id="steps-unpacked">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h4>下载并解压</h4>
+                    <p>点击上方蓝色按钮下载 .zip 文件，解压到任意文件夹</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h4>打开扩展管理页面</h4>
+                    <p><strong>Chrome：</strong>地址栏输入 <code>chrome://extensions/</code> 回车</p>
+                    <p><strong>Edge：</strong>地址栏输入 <code>edge://extensions/</code> 回车</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h4>开启开发者模式</h4>
+                    <p><strong>Chrome：</strong>开启右上角「开发者模式」开关</p>
+                    <p><strong>Edge：</strong>开启左下角「开发人员模式」开关</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                    <h4>加载扩展</h4>
+                    <p>点击「加载已解压的扩展程序」，选择解压后的文件夹</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">5</div>
+                <div class="step-content">
+                    <h4>开始使用</h4>
+                    <p>打开任意网页，右上角会出现蓝色小球，点击即可使用</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            💡 提示：安装后打开任意网页，点击右上角蓝色小球展开面板，输入文字后点击「开始输入」，然后在延迟时间内切换到目标输入框即可。按 <strong>Alt+K</strong> 可快速切换面板。
+        </div>
+    </div>
+
+    <div class="card s-card section-card">
         <div class="section-title">功能特点</div>
         <div class="features-grid">
             <div class="feature-item">
@@ -309,7 +531,7 @@
         </div>
     </div>
 
-    <div class="card section-card">
+    <div class="card s-card section-card">
         <div class="section-title">三步搞定</div>
         <p style="text-align:center;color:rgba(255,255,255,0.5);margin-bottom:2em;">简单到不需要说明书</p>
         <div class="demo-steps">
@@ -331,7 +553,7 @@
         </div>
     </div>
 
-    <div class="card section-card" style="text-align:center;">
+    <div class="card s-card section-card" style="text-align:center;">
         <div class="section-title">快捷键</div>
         <div class="shortcut-box">
             <p>随时随地切换面板</p>
@@ -340,9 +562,9 @@
     </div>
 
     <div class="footer-links">
+        <a href="index.html">主页</a>
         <a href="https://github.com/GeLith/keyboard-simulator-web" target="_blank">GitHub</a>
-        <a href="install.html">安装教程</a>
-        <a href="https://github.com/GeLith/keyboard-simulator-web/releases" target="_blank">下载</a>
+        <a href="#install">安装教程</a>
         <a href="https://github.com/GeLith/keyboard-simulator-web/issues" target="_blank">反馈</a>
         <p style="margin-top:0.8em;">Made by GeLith | MIT License</p>
     </div>
@@ -379,6 +601,18 @@
             setTimeout(createParticle, i * 400);
         }
         setInterval(createParticle, 1000);
+
+        var tabs = document.querySelectorAll('.method-tab');
+        tabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                tabs.forEach(function(t) { t.classList.remove('active'); });
+                tab.classList.add('active');
+                var method = tab.getAttribute('data-method');
+                document.getElementById('steps-crx').classList.toggle('hidden', method !== 'crx');
+                document.getElementById('steps-unpacked').classList.toggle('hidden', method !== 'unpacked');
+
+            });
+        });
     })();
 </script>
 
