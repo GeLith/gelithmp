@@ -330,23 +330,13 @@ main {
     letter-spacing: 2px;
 }
 
-/* ==================== 双栏布局 ==================== */
-.content-split {
-    display: flex;
-    gap: 2em;
-}
-
-.split-left {
-    flex: 0 0 auto;
-    min-width: 14em;
-}
-
-.split-right {
-    flex: 1;
-    min-width: 0;
-}
-
 /* ==================== 工具箱 ==================== */
+.tool-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8em;
+}
+
 .tool-item {
     display: flex;
     align-items: center;
@@ -595,16 +585,6 @@ body.night-mode {
     .main-card {
         width: 100%;
         padding: 1.2em;
-    }
-
-    .content-split {
-        flex-direction: column;
-        gap: 1.5em;
-    }
-
-    .split-left, .split-right {
-        flex: none;
-        width: 100%;
     }
 
     .friend-links {
