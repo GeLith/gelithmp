@@ -161,24 +161,62 @@ main {
     display: block;
     border-radius: 20px;
     width: 100%;
-    max-width: 860px;
+    max-width: 940px;
     padding: 2.5em;
     opacity: 0;
     animation: fade-in 1s ease 0s forwards;
+}
+
+.main-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+}
+
+.col-intro {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-right: 1.5em;
+    min-width: 0;
+}
+
+.col-tools {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0 1.5em;
+    min-width: 0;
+}
+
+.col-links {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-left: 1.5em;
+    min-width: 0;
+}
+
+.col-divider {
+    width: 1px;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.25), transparent);
 }
 
 .header {
     display: block;
     width: 100%;
     text-align: center;
-    margin: 0.5em auto 0.8em;
+    margin: 0 0 0.8em;
     height: auto;
 }
 
 .header h1 {
     text-align: center;
     font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    font-size: 2.35em;
+    font-size: 1.6em;
     color: #fff;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.2);
     animation: text-glow 3s ease-in-out infinite alternate;
@@ -190,7 +228,7 @@ main {
 }
 
 .header h2 {
-    font-size: 1.3em;
+    font-size: 1em;
     color: rgba(255, 255, 255, 0.85);
     font-weight: 400;
     margin: 20px 0 0 0;
@@ -204,12 +242,12 @@ main {
 .header h1::after {
     content: '';
     position: absolute;
-    bottom: -10px;
+    bottom: -6px;
     left: 50%;
     transform: translateX(-50%);
-    width: 100px;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
     border-radius: 2px;
 }
 
@@ -258,9 +296,9 @@ main {
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin: 1.5em auto;
-    padding: 0.5em;
-    gap: 1.2em;
+    margin: 0.5em auto 0;
+    padding: 0;
+    gap: 0.8em;
     flex-wrap: wrap;
 }
 
@@ -268,8 +306,8 @@ main {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 3.5em;
-    height: 3.5em;
+    width: 2.8em;
+    height: 2.8em;
     border-radius: 50%;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.12) 100%);
     backdrop-filter: blur(20px) saturate(150%) brightness(1.05);
@@ -309,8 +347,8 @@ main {
 }
 
 .icon-link svg {
-    width: 1.8em;
-    height: 1.8em;
+    width: 1.4em;
+    height: 1.4em;
     transition: all 0.4s ease;
     filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
 }
@@ -321,9 +359,9 @@ main {
 }
 
 .section-title {
-    font-size: 1em;
-    color: rgba(255, 255, 255, 0.75);
-    margin: 0 0 0.8em;
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 0 1em;
     font-weight: 600;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     text-transform: uppercase;
@@ -331,17 +369,11 @@ main {
 }
 
 /* ==================== 工具箱 ==================== */
-.tool-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8em;
-}
-
 .tool-item {
     display: flex;
     align-items: center;
-    gap: 0.8em;
-    padding: 0.8em 1.2em;
+    gap: 0.6em;
+    padding: 0.7em 1em;
     border-radius: 14px;
     background: linear-gradient(135deg, rgba(51, 122, 183, 0.4) 0%, rgba(40, 96, 144, 0.25) 100%);
     backdrop-filter: blur(20px) saturate(150%);
@@ -389,8 +421,8 @@ main {
 /* ==================== 友链网格 ==================== */
 .friend-links {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.6em;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5em;
 }
 
 .friend-link {
@@ -587,35 +619,47 @@ body.night-mode {
         padding: 1.2em;
     }
 
+    .main-row {
+        flex-direction: column;
+        gap: 1.2em;
+    }
+
+    .col-intro, .col-tools, .col-links {
+        padding: 0;
+        flex: none;
+        width: 100%;
+    }
+
+    .col-divider {
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    }
+
     .friend-links {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .icons {
-        gap: 0.8em;
-        margin: 1em auto;
-    }
-
-    .icon-link {
-        width: 3em;
-        height: 3em;
-    }
-
-    .icon-link:hover {
-        transform: scale(1.1) rotate(10deg);
-    }
-
-    .icon-link svg {
-        width: 1.5em;
-        height: 1.5em;
-    }
-
     .header h1 {
-        font-size: 1.8em;
+        font-size: 1.6em;
     }
 
     .header h2 {
-        font-size: 1.2em;
+        font-size: 1em;
+    }
+
+    .icons {
+        gap: 0.6em;
+    }
+
+    .icon-link {
+        width: 2.5em;
+        height: 2.5em;
+    }
+
+    .icon-link svg {
+        width: 1.3em;
+        height: 1.3em;
     }
 
     .theme-toggle {
