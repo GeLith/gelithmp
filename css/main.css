@@ -1,4 +1,3 @@
-/* ==================== 基础样式 ==================== */
 * {
     margin: 0;
     padding: 0;
@@ -27,7 +26,6 @@ body {
     transition: background 0.8s ease, color 0.5s ease;
 }
 
-/* ==================== 加载动画 ==================== */
 .loading-screen {
     position: fixed;
     top: 0;
@@ -69,7 +67,6 @@ body {
     to { transform: rotate(360deg); }
 }
 
-/* ==================== 主题切换按钮 ==================== */
 .theme-toggle {
     position: fixed;
     top: 20px;
@@ -106,7 +103,6 @@ body {
     transform: scale(0.85) rotate(-20deg);
 }
 
-/* ==================== 卡片基础样式 ==================== */
 .card {
     position: relative;
     z-index: 1;
@@ -153,13 +149,10 @@ body {
     opacity: 1;
 }
 
-/* ==================== 具体卡片样式 ==================== */
 main {
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 1.5em;
     width: 100%;
     padding: 2em 1em;
 }
@@ -167,234 +160,19 @@ main {
 .main-card {
     display: block;
     border-radius: 20px;
-    width: 42em;
-    padding: 2em;
+    width: 100%;
+    max-width: 860px;
+    padding: 2.5em;
     opacity: 0;
     animation: fade-in 1s ease 0s forwards;
 }
 
-.right-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2em;
-}
-
-.tool-card {
-    display: block;
-    border-radius: 16px;
-    width: 22em;
-    padding: 1.2em 1.5em;
-    opacity: 0;
-    animation: fade-in 1s ease 0.15s forwards;
-}
-
-.friend-card {
-    display: block;
-    border-radius: 16px;
-    width: 22em;
-    height: 20em;
-    opacity: 0;
-    animation: fade-in 1s ease 0.2s forwards;
-    overflow: hidden;
-}
-
-.tool-header {
-    text-align: center;
-    margin-bottom: 1.2em;
-}
-
-.tool-header h3 {
-    font-size: 1.5em;
-    color: #fff;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    margin: 0;
-}
-
-.tool-header p {
-    font-size: 0.9em;
-    color: rgba(255, 255, 255, 0.7);
-    margin: 0.3em 0 0 0;
-}
-
-.tool-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1em;
-}
-
-.tool-item {
-    display: flex;
-    align-items: center;
-    gap: 1em;
-    padding: 1em 1.5em;
-    border-radius: 16px;
-    background: linear-gradient(135deg, rgba(51, 122, 183, 0.4) 0%, rgba(40, 96, 144, 0.25) 100%);
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    text-decoration: none;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    min-width: 14em;
-}
-
-.tool-item:hover {
-    transform: translateY(-5px) scale(1.03);
-    background: linear-gradient(135deg, rgba(51, 122, 183, 0.55) 0%, rgba(40, 96, 144, 0.4) 100%);
-    box-shadow: 0 12px 30px rgba(51, 122, 183, 0.3);
-}
-
-.tool-icon {
-    font-size: 2.5em;
-    width: 2.5em;
-    height: 2.5em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 12px;
-}
-
-.tool-info {
-    text-align: left;
-}
-
-.tool-name {
-    color: #fff;
-    font-size: 1.1em;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-.tool-desc {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.85em;
-    margin-top: 0.2em;
-}
-
-@keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* ==================== 黄色卡片样式 ==================== */
-.yellow-card {
-    overflow: hidden;
-    margin-top: 0.8em;
-    margin-left: 0.8em;
-    text-align: right;
-    border-radius: 12px;
-    width: 9.2em;
-    height: 4.5em;
-    background: linear-gradient(135deg, rgba(249, 182, 82, 0.35) 0%, rgba(249, 200, 100, 0.2) 50%, rgba(249, 182, 82, 0.35) 100%);
-    backdrop-filter: blur(30px) saturate(160%) brightness(1.05);
-    -webkit-backdrop-filter: blur(30px) saturate(160%) brightness(1.05);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow:
-        0 8px 24px rgba(249, 182, 82, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-        inset 1px 0 0 rgba(255, 255, 255, 0.15),
-        inset -1px 0 0 rgba(255, 255, 255, 0.15);
-    float: left;
-    text-decoration: none;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-}
-
-.yellow-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: inherit;
-    background:
-        radial-gradient(ellipse at 25% 15%, rgba(255, 255, 255, 0.25) 0%, transparent 50%),
-        radial-gradient(ellipse at 75% 85%, rgba(255, 255, 255, 0.08) 0%, transparent 40%);
-    pointer-events: none;
-    z-index: 2;
-    mix-blend-mode: overlay;
-    opacity: 0.7;
-    transition: opacity 0.4s ease;
-}
-
-.yellow-card:hover {
-    transform: scale(1.08) translateY(-5px) rotateX(5deg);
-    box-shadow:
-        0 15px 40px rgba(249, 182, 82, 0.3),
-        0 4px 12px rgba(249, 182, 82, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.12),
-        0 0 30px rgba(249, 182, 82, 0.15);
-    animation: pulse 1.5s infinite;
-}
-
-.yellow-card:hover::before {
-    opacity: 1;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        box-shadow: 0 15px 40px rgba(249, 182, 82, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(255, 255, 255, 0.12);
-    }
-    50% {
-        box-shadow: 0 20px 50px rgba(249, 182, 82, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -1px 0 rgba(255, 255, 255, 0.15), 0 0 40px rgba(249, 182, 82, 0.2);
-    }
-}
-
-/* ==================== 头像和文字样式 ==================== */
-.avatar {
-    margin-top: 0.8em;
-    margin-left: 0.5em;
-    border-radius: 100%;
-    text-align: left;
-    width: 2.5em;
-    height: 2.5em;
-    transition: transform 0.5s ease;
-    float: left;
-}
-
-.avatar:hover {
-    transform: rotate(360deg) scale(1.1);
-}
-
-.avatar img {
-    border-radius: 100%;
-    width: 2.5em;
-    height: 2.5em;
-    transition: all 0.5s ease;
-    display: block;
-}
-
-.avatar:hover img {
-    filter: brightness(1.2) drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
-}
-
-.card-text {
-    word-wrap: break-word;
-    word-break: break-all;
-    margin-top: -2.5em;
-    margin-left: 3em;
-    text-align: center;
-    width: 5.5em;
-    height: 4.5em;
-    color: aliceblue;
-    font-size: 0.85em;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    float: left;
-}
-
-/* ==================== 标题区域 ==================== */
 .header {
     display: block;
     width: 100%;
     text-align: center;
-    margin: 0.5em auto 1em;
-    padding: 0.5em 0;
+    margin: 0.5em auto 0.8em;
     height: auto;
-    clear: both;
 }
 
 .header h1 {
@@ -445,62 +223,18 @@ main {
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* ==================== 区块标题 ==================== */
-.section-title {
-    font-size: 1.1em;
-    color: rgba(255, 255, 255, 0.85);
-    margin: 1.2em 0 0.8em;
-    padding-left: 0.3em;
-    text-align: left;
-    font-weight: 600;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-/* ==================== 卡片内友链 ==================== */
-.friend-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1em;
-    padding: 0.5em 0;
-    justify-content: flex-start;
-}
-
-.friend-links .friend-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5em;
-    padding: 0.5em 1em;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.85);
-    text-decoration: none;
-    font-size: 0.9em;
-    transition: all 0.3s ease;
-}
-
-.friend-links .friend-link:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.friend-links .friend-link img {
-    width: 1.6em;
-    height: 1.6em;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-/* ==================== 分隔线 ==================== */
 .divider {
-    margin: 0.8em auto;
+    margin: 1em auto;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
     width: 100%;
     height: 1px;
     position: relative;
     overflow: hidden;
-    clear: both;
 }
 
 .divider::before {
@@ -519,18 +253,15 @@ main {
     100% { left: 100%; }
 }
 
-/* ==================== 图标区域 ==================== */
 .icons {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: auto;
-    margin: 2em auto 2em;
+    margin: 1.5em auto;
     padding: 0.5em;
     gap: 1.2em;
     flex-wrap: wrap;
-    clear: both;
 }
 
 .icon-link {
@@ -589,7 +320,125 @@ main {
     filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
 }
 
-/* ==================== 粒子容器 ==================== */
+.section-title {
+    font-size: 1em;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 0 0 0.8em;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* ==================== 双栏布局 ==================== */
+.content-split {
+    display: flex;
+    gap: 2em;
+}
+
+.split-left {
+    flex: 0 0 auto;
+    min-width: 14em;
+}
+
+.split-right {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ==================== 工具箱 ==================== */
+.tool-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+    padding: 0.8em 1.2em;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(51, 122, 183, 0.4) 0%, rgba(40, 96, 144, 0.25) 100%);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tool-item:hover {
+    transform: translateY(-3px) scale(1.02);
+    background: linear-gradient(135deg, rgba(51, 122, 183, 0.55) 0%, rgba(40, 96, 144, 0.4) 100%);
+    box-shadow: 0 8px 24px rgba(51, 122, 183, 0.3);
+}
+
+.tool-icon {
+    font-size: 2em;
+    width: 2em;
+    height: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.tool-info {
+    text-align: left;
+}
+
+.tool-name {
+    color: #fff;
+    font-size: 1em;
+    font-weight: bold;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.tool-desc {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8em;
+    margin-top: 0.15em;
+}
+
+/* ==================== 友链网格 ==================== */
+.friend-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6em;
+}
+
+.friend-link {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.5em 0.7em;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 0.82em;
+    transition: all 0.25s ease;
+    min-width: 0;
+}
+
+.friend-link:hover {
+    background: rgba(255, 255, 255, 0.18);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.friend-link img {
+    width: 1.4em;
+    height: 1.4em;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.friend-link span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ==================== 粒子、鼠标、页脚 ==================== */
 .particles {
     position: fixed;
     top: 0;
@@ -615,7 +464,6 @@ main {
     100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
 }
 
-/* ==================== 鼠标跟随效果 ==================== */
 .mouse-follower {
     position: fixed;
     width: 30px;
@@ -631,7 +479,6 @@ main {
     mix-blend-mode: screen;
 }
 
-/* ==================== 页脚 ==================== */
 .footer {
     position: fixed;
     bottom: 0;
@@ -673,40 +520,31 @@ body.night-mode {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.night-mode .yellow-card {
-    background: linear-gradient(135deg, rgba(180, 130, 50, 0.3) 0%, rgba(160, 120, 40, 0.2) 50%, rgba(180, 130, 50, 0.3) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
 .night-mode .tool-item {
     background: linear-gradient(135deg, rgba(40, 70, 110, 0.4) 0%, rgba(30, 50, 80, 0.25) 100%);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .night-mode .section-title {
-    color: #d0d0e8;
+    color: #b0b0d0;
 }
 
 .night-mode .friend-links .friend-link {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: #d0d0e8;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: #c0c0e0;
 }
 
 .night-mode .friend-links .friend-link:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .night-mode .header h1 {
-    color: #e8e8ff;
+    color: #e0e0f0;
 }
 
 .night-mode .header h2 {
-    color: #d0d0e8;
-}
-
-.night-mode .card-text {
-    color: #f0f0ff;
+    color: #c0c0d8;
 }
 
 .night-mode .icon-link {
@@ -718,7 +556,7 @@ body.night-mode {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.14) 100%);
 }
 
-/* ==================== 美化滚动条 ==================== */
+/* ==================== 滚动条 ==================== */
 ::-webkit-scrollbar {
     width: 10px;
 }
@@ -756,8 +594,21 @@ body.night-mode {
 
     .main-card {
         width: 100%;
-        padding: 1em;
-        min-height: auto;
+        padding: 1.2em;
+    }
+
+    .content-split {
+        flex-direction: column;
+        gap: 1.5em;
+    }
+
+    .split-left, .split-right {
+        flex: none;
+        width: 100%;
+    }
+
+    .friend-links {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .icons {
@@ -779,35 +630,12 @@ body.night-mode {
         height: 1.5em;
     }
 
-    .header {
-        margin: 0.5em auto;
-        width: 100%;
-    }
-
     .header h1 {
         font-size: 1.8em;
     }
 
     .header h2 {
         font-size: 1.2em;
-    }
-
-    .divider {
-        width: 100%;
-        margin: 1em auto;
-    }
-
-    .section-title {
-        font-size: 1em;
-    }
-
-    .friend-links {
-        gap: 0.6em;
-    }
-
-    .friend-links .friend-link {
-        padding: 0.4em 0.8em;
-        font-size: 0.85em;
     }
 
     .theme-toggle {
