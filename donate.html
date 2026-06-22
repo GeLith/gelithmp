@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>赞助 - 洞洞的站点</title>
+    <link href="img/1.ico" rel="icon" type="image/x-icon">
+    <link href="img/1.ico" rel="apple-touch-icon">
+    <link href="css/main.css" rel="stylesheet">
+    <style>
+        body {
+            background:
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.35) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 200, 124, 0.35) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(100, 210, 255, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-size: 200% 200%;
+            animation: gradient-shift 20s ease-in-out infinite alternate;
+        }
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body, html { margin: 0; padding: 0; min-height: 100vh; font-family: "Microsoft YaHei", sans-serif; }
+
+        .donate-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2em 1em;
+        }
+
+        .donate-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 28px;
+            padding: 3em;
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .donate-card h1 {
+            color: #fff;
+            font-size: 2.2em;
+            margin-bottom: 0.3em;
+        }
+
+        .donate-card p {
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 2em;
+            font-size: 1.1em;
+        }
+
+        .qr-grid {
+            display: flex;
+            gap: 2em;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .qr-item {
+            flex: 1;
+            min-width: 200px;
+            max-width: 280px;
+        }
+
+        .qr-item h3 {
+            color: #fff;
+            margin-bottom: 1em;
+            font-size: 1.2em;
+        }
+
+        .qr-item img {
+            width: 100%;
+            border-radius: 16px;
+            border: 2px solid rgba(255,255,255,0.15);
+            background: #fff;
+            padding: 8px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 2em;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="donate-wrap">
+        <div class="donate-card">
+            <h1>赞助支持</h1>
+            <p>如果您觉得这个工具对你有帮助，欢迎赞助支持～</p>
+            <div class="qr-grid">
+                <div class="qr-item">
+                    <h3>微信</h3>
+                    <img src="img/wechat-pay.jpg" alt="微信收款码">
+                </div>
+                <div class="qr-item">
+                    <h3>支付宝</h3>
+                    <img src="img/alipay.jpg" alt="支付宝收款码">
+                </div>
+            </div>
+            <a class="back-link" href="index.html">← 返回主页</a>
+        </div>
+    </div>
+</body>
+</html>
