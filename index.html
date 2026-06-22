@@ -24,14 +24,15 @@
     </div>
 
     <main>
-        <div class="card main-card">
-            <div class="main-row">
-                <div class="col-intro">
-                    <div class="header">
-                        <h1>欢迎来到洞洞的站点</h1>
-                        <h2>Welcome to Dongdong's site</h2>
-                    </div>
-                    <div class="icons">
+        <div class="card-container">
+            <div class="card main-card" id="mainCard">
+                <div class="main-row">
+                    <div class="col-intro">
+                        <div class="header">
+                            <h1>欢迎来到洞洞的站点</h1>
+                            <h2>Welcome to Dongdong's site</h2>
+                        </div>
+                        <div class="icons">
                         <a href="https://blog.felixdd.top" target="_blank" title="blog" class="icon-link">
                             <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M143.1 99.8h597.1c44 0 79.6 35.6 79.6 79.6v664c0 44-35.6 79.6-79.6 79.6H143.1c-44 0-79.6-35.6-79.6-79.6v-664c0-44 35.6-79.6 79.6-79.6z" fill="#707070"></path>
@@ -110,20 +111,8 @@
                 </div>
             </div>
         </div>
-    </main>
 
-    <div class="theme-toggle" id="themeToggle">
-        <svg id="themeIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12,18C8.68629,18 6,15.3137 6,12C6,8.68629 8.68629,6 12,6C15.3137,6 18,8.68629 18,12C18,15.3137 15.3137,18 12,18ZM12,16C14.2091,16 16,14.2091 16,12C16,9.79086 14.2091,8 12,8C9.79086,8 8,9.79086 8,12C8,14.2091 9.79086,16 12,16ZM11,1H13V4H11V1ZM11,20H13V23H11V20ZM3.51472,4.92893L4.92893,3.51472L7.05025,5.63604L5.63604,7.05025L3.51472,4.92893ZM16.9497,18.364L18.364,16.9497L20.4853,19.0711L19.0711,20.4853L16.9497,18.364ZM19.0711,3.51472L20.4853,4.92893L18.364,7.05025L16.9497,5.63604L19.0711,3.51472ZM5.63604,16.9497L7.05025,18.364L4.92893,20.4853L3.51472,19.0711L5.63604,16.9497ZM23,11V13H20V11H23ZM4,11V13H1V11H4Z"></path>
-        </svg>
-    </div>
-
-    <div class="particles" id="particles"></div>
-    <div class="mouse-follower" id="mouseFollower"></div>
-
-    <div class="donate-modal" id="donateModal">
-        <div class="donate-overlay" onclick="closeDonate()"></div>
-        <div class="donate-card">
+        <div class="card donate-card-inner" id="donateCard">
             <button class="donate-close" onclick="closeDonate()">&times;</button>
             <h1>赞助支持</h1>
             <p>如果您觉得这个工具对你有帮助，欢迎赞助支持～</p>
@@ -138,7 +127,16 @@
                 </div>
             </div>
         </div>
+    </main>
+
+    <div class="theme-toggle" id="themeToggle">
+        <svg id="themeIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12,18C8.68629,18 6,15.3137 6,12C6,8.68629 8.68629,6 12,6C15.3137,6 18,8.68629 18,12C18,15.3137 15.3137,18 12,18ZM12,16C14.2091,16 16,14.2091 16,12C16,9.79086 14.2091,8 12,8C9.79086,8 8,9.79086 8,12C8,14.2091 9.79086,16 12,16ZM11,1H13V4H11V1ZM11,20H13V23H11V20ZM3.51472,4.92893L4.92893,3.51472L7.05025,5.63604L5.63604,7.05025L3.51472,4.92893ZM16.9497,18.364L18.364,16.9497L20.4853,19.0711L19.0711,20.4853L16.9497,18.364ZM19.0711,3.51472L20.4853,4.92893L18.364,7.05025L16.9497,5.63604L19.0711,3.51472ZM5.63604,16.9497L7.05025,18.364L4.92893,20.4853L3.51472,19.0711L5.63604,16.9497ZM23,11V13H20V11H23ZM4,11V13H1V11H4Z"></path>
+        </svg>
     </div>
+
+    <div class="particles" id="particles"></div>
+    <div class="mouse-follower" id="mouseFollower"></div>
 
     <footer class="footer">
         <div>&copy; 2025 Dongdong. All rights reserved.</div>
@@ -262,10 +260,12 @@
     </script>
     <script>
         function openDonate() {
-            document.getElementById('donateModal').classList.add('active');
+            document.getElementById('mainCard').classList.add('card-hide');
+            document.getElementById('donateCard').classList.add('card-show');
         }
         function closeDonate() {
-            document.getElementById('donateModal').classList.remove('active');
+            document.getElementById('mainCard').classList.remove('card-hide');
+            document.getElementById('donateCard').classList.remove('card-show');
         }
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeDonate();

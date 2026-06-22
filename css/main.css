@@ -117,6 +117,7 @@ body {
         0 0 0 1px rgba(255, 255, 255, 0.03);
     transform-style: preserve-3d;
     will-change: transform;
+    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), visibility 0.5s ease;
     border-radius: 28px;
     transition: box-shadow 0.4s ease;
 }
@@ -686,61 +687,50 @@ body.night-mode {
     }
 }
 
-/* ==================== 赞助弹窗 ==================== */
-.donate-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
+/* ==================== 赞助卡片切换 ==================== */
+.card-container {
+    position: relative;
     width: 100%;
-    height: 100%;
-    z-index: 10000;
     display: flex;
-    align-items: center;
     justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
-.donate-modal.active {
-    opacity: 1;
-    visibility: visible;
+.card-container > .card {
+    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease;
 }
 
-.donate-overlay {
+.card-hide {
+    opacity: 0 !important;
+    transform: scale(0.85) !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+.donate-card-inner {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-.donate-card {
-    position: relative;
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(25px) saturate(200%);
-    -webkit-backdrop-filter: blur(25px) saturate(200%);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 28px;
-    padding: 3em 3em 2.5em;
-    max-width: 600px;
-    width: 90%;
+    left: 50%;
+    transform: translateX(-50%) scale(0.85);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    width: 500px;
+    max-width: 90vw;
+    padding: 3em 2.5em;
     text-align: center;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    transform: scale(0.8) translateY(30px);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 2;
 }
 
-.donate-modal.active .donate-card {
-    transform: scale(1) translateY(0);
+.donate-card-inner.card-show {
+    opacity: 1 !important;
+    transform: translateX(-50%) scale(1) !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
 }
 
 .donate-close {
     position: absolute;
-    top: 12px;
+    top: 14px;
     right: 18px;
     background: none;
     border: none;
@@ -756,7 +746,7 @@ body.night-mode {
     transform: rotate(90deg);
 }
 
-.donate-card h1 {
+.donate-card-inner h1 {
     color: #fff;
     font-size: 2em;
     margin-bottom: 0.3em;
@@ -764,7 +754,7 @@ body.night-mode {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.donate-card p {
+.donate-card-inner p {
     color: rgba(255, 255, 255, 0.6);
     margin-bottom: 2em;
     font-size: 1.05em;
@@ -779,14 +769,14 @@ body.night-mode {
 
 .qr-item {
     flex: 1;
-    min-width: 180px;
-    max-width: 220px;
+    min-width: 160px;
+    max-width: 200px;
 }
 
 .qr-item h3 {
     color: #fff;
     margin-bottom: 0.8em;
-    font-size: 1.15em;
+    font-size: 1.1em;
 }
 
 .qr-item img {
@@ -798,8 +788,9 @@ body.night-mode {
 }
 
 @media only screen and (max-width: 762px) {
-    .donate-card {
+    .donate-card-inner {
         padding: 2em 1.5em;
+        width: 95vw;
     }
     .qr-grid {
         gap: 1em;
