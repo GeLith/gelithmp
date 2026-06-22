@@ -188,8 +188,8 @@
                 card.addEventListener('mousemove', function(e) {
                     var rect = card.getBoundingClientRect();
                     var s = tiltStates[idx];
-                    s.trx = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2) * -10;
-                    s.try_ = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2) * 10;
+                    s.trx = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2) * -8;
+                    s.try_ = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2) * 8;
                     s.ts = 1.03;
                 });
                 card.addEventListener('mouseleave', function() {
