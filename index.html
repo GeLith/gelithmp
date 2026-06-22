@@ -188,9 +188,9 @@
                 card.addEventListener('mousemove', function(e) {
                     var rect = card.getBoundingClientRect();
                     var s = tiltStates[idx];
-                    s.trx = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2) * -6;
-                    s.try_ = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2) * 6;
-                    s.ts = 1.02;
+                    s.trx = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2) * -10;
+                    s.try_ = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2) * 10;
+                    s.ts = 1.03;
                 });
                 card.addEventListener('mouseleave', function() {
                     tiltStates[idx].trx = 0;
@@ -237,9 +237,9 @@
 
                 for (var i = 0; i < tiltStates.length; i++) {
                     var s = tiltStates[i];
-                    s.rx += (s.trx - s.rx) / 20;
-                    s.ry += (s.try_ - s.ry) / 20;
-                    s.s += (s.ts - s.s) / 20;
+                    s.rx += (s.trx - s.rx) / 10;
+                    s.ry += (s.try_ - s.ry) / 10;
+                    s.s += (s.ts - s.s) / 10;
                     s.el.style.transform = 'perspective(800px) rotateX(' + s.rx.toFixed(2) + 'deg) rotateY(' + s.ry.toFixed(2) + 'deg) scale(' + s.s.toFixed(4) + ')';
                 }
 
