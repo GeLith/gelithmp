@@ -346,6 +346,10 @@ main {
     opacity: 1;
 }
 
+.donate-icon svg {
+    filter: none !important;
+}
+
 .icon-link svg {
     width: 1.8em;
     height: 1.8em;
