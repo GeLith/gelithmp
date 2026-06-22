@@ -32,12 +32,6 @@
                         <h2>Welcome to Dongdong's site</h2>
                     </div>
                     <div class="icons">
-                        <a href="donate.html" target="_blank" title="赞助" class="icon-link">
-                            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M512 128C512 128 320 64 160 192C0 320 0 544 0 544C0 544 160 832 512 960C864 832 1024 544 1024 544C1024 544 1024 320 864 192C704 64 512 128 512 128Z" fill="#e74c3c"/>
-                                <path d="M512 256C512 256 352 192 224 288C96 384 96 544 96 544C96 544 224 768 512 896C800 768 928 544 928 544C928 544 928 384 800 288C672 192 512 256 512 256Z" fill="#ff6b6b"/>
-                            </svg>
-                        </a>
                         <a href="https://blog.felixdd.top" target="_blank" title="blog" class="icon-link">
                             <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M143.1 99.8h597.1c44 0 79.6 35.6 79.6 79.6v664c0 44-35.6 79.6-79.6 79.6H143.1c-44 0-79.6-35.6-79.6-79.6v-664c0-44 35.6-79.6 79.6-79.6z" fill="#707070"></path>
@@ -60,6 +54,12 @@
                             <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M896 170.666667H128c-46.933333 0-85.333333 38.4-85.333333 85.333333v512c0 46.933333 38.4 85.333333 85.333333 85.333333h768c46.933333 0 85.333333-38.4 85.333333-85.333333V256c0-46.933333-38.4-85.333333-85.333333-85.333333zM181.333333 405.333333c-17.066667 0-32-14.933333-32-32S164.266667 341.333333 181.333333 341.333333s32 14.933333 32 32S198.4 405.333333 181.333333 405.333333z m0-106.666666c-17.066667 0-32-14.933333-32-32S164.266667 234.666667 181.333333 234.666667s32 14.933333 32 32S198.4 298.666667 181.333333 298.666667zM490.666667 746.666667c0 23.466667-19.2 42.666667-42.666667 42.666666h-64c-23.466667 0-42.666667-19.2-42.666667-42.666666V277.333333c0-23.466667 19.2-42.666667 42.666667-42.666666h64c23.466667 0 42.666667 19.2 42.666667 42.666666v469.333334z m213.333333 0c0 23.466667-19.2 42.666667-42.666667 42.666666h-64c-23.466667 0-42.666667-19.2-42.666667-42.666666V277.333333c0-23.466667 19.2-42.666667 42.666667-42.666666h64c23.466667 0 42.666667 19.2 42.666667 42.666666v469.333334z m213.333333 0c0 23.466667-19.2 42.666667-42.666667 42.666666h-64c-23.466667 0-42.666667-19.2-42.666667-42.666666V277.333333c0-23.466667 19.2-42.666667 42.666667-42.666666h64c23.466667 0 42.666667 19.2 42.666667 42.666666v469.333334z" fill="#707070"></path>
                                 <path d="M416 298.666667c-17.066667 0-32 14.933333-32 32v106.666666c0 17.066667 14.933333 32 32 32s32-14.933333 32-32v-106.666666c0-17.066667-14.933333-32-32-32zM629.333333 298.666667c-17.066667 0-32 14.933333-32 32v106.666666c0 17.066667 14.933333 32 32 32s32-14.933333 32-32v-106.666666c0-17.066667-14.933333-32-32-32zM842.666667 298.666667c-17.066667 0-32 14.933333-32 32v106.666666c0 17.066667 14.933333 32 32 32s32-14.933333 32-32v-106.666666c0-17.066667-14.933333-32-32-32z" fill="#707070"></path>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" onclick="openDonate()" title="赞助" class="icon-link donate-icon">
+                            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M512 128C512 128 320 64 160 192C0 320 0 544 0 544C0 544 160 832 512 960C864 832 1024 544 1024 544C1024 544 1024 320 864 192C704 64 512 128 512 128Z" fill="#e74c3c"/>
+                                <path d="M512 256C512 256 352 192 224 288C96 384 96 544 96 544C96 544 224 768 512 896C800 768 928 544 928 544C928 544 928 384 800 288C672 192 512 256 512 256Z" fill="#ff6b6b"/>
                             </svg>
                         </a>
 
@@ -122,6 +122,25 @@
     <div class="particles" id="particles"></div>
     <div class="mouse-follower" id="mouseFollower"></div>
 
+    <div class="donate-modal" id="donateModal">
+        <div class="donate-overlay" onclick="closeDonate()"></div>
+        <div class="donate-card">
+            <button class="donate-close" onclick="closeDonate()">&times;</button>
+            <h1>赞助支持</h1>
+            <p>如果您觉得这个工具对你有帮助，欢迎赞助支持～</p>
+            <div class="qr-grid">
+                <div class="qr-item">
+                    <h3>支付宝</h3>
+                    <img src="img/alipay.jpg" alt="支付宝收款码">
+                </div>
+                <div class="qr-item">
+                    <h3>微信</h3>
+                    <img src="img/wechat-pay.jpg" alt="微信收款码">
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <div>&copy; 2025 Dongdong. All rights reserved.</div>
         <div>
@@ -129,7 +148,7 @@
             &nbsp;|&nbsp;
             <a href="https://space.bilibili.com/94641872" target="_blank">Bilibili</a>
             &nbsp;|&nbsp;
-            <a href="donate.html" target="_blank">赞助</a>
+            <a href="javascript:void(0)" onclick="openDonate()">赞助</a>
         </div>
     </footer>
 
@@ -241,6 +260,17 @@
                 if (loading) loading.classList.add('hidden');
             }, 800);
         })();
+    </script>
+    <script>
+        function openDonate() {
+            document.getElementById('donateModal').classList.add('active');
+        }
+        function closeDonate() {
+            document.getElementById('donateModal').classList.remove('active');
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeDonate();
+        });
     </script>
 </body>
 </html>
