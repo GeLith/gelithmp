@@ -850,8 +850,9 @@ body.night-mode {
 .donate-card-inner {
     position: absolute;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
+    margin: 0 auto;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -931,8 +932,8 @@ body.night-mode {
 @media only screen and (max-width: 762px) {
     .donate-card-inner {
         padding: 2em 1.2em;
-        width: 92vw;
-        max-width: 92vw;
+        width: 100%;
+        max-width: 100%;
     }
     .donate-card-inner h1 {
         font-size: 1.5em;
