@@ -131,6 +131,17 @@
             box-shadow: 0 8px 30px rgba(92, 184, 92, 0.6);
         }
 
+        .btn-purple {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(155, 89, 182, 0.4);
+        }
+
+        .btn-purple:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(155, 89, 182, 0.6);
+        }
+
         .section-card {
             padding: 3em;
         }
@@ -385,6 +396,7 @@
         <div class="btn-row">
             <a class="btn btn-green" href="https://github.com/GeLith/keyboard-simulator-web/releases/download/v1.2.3/keyboard-simulator-v1.2.3.crx" download="keyboard-simulator-v1.2.3.crx">⬇ 下载插件</a>
             <a class="btn btn-outline" href="https://github.com/GeLith/keyboard-simulator-web" target="_blank">GitHub</a>
+            <a class="btn btn-purple" href="https://scriptcat.org/zh-CN/script-show-page/6807" target="_blank">🐱 脚本猫安装</a>
         </div>
     </div>
 
@@ -393,6 +405,7 @@
         <div class="dl-row">
             <a class="btn btn-green" href="https://github.com/GeLith/keyboard-simulator-web/releases/download/v1.2.3/keyboard-simulator-v1.2.3.crx" download="keyboard-simulator-v1.2.3.crx">⬇ 下载 .crx（推荐）</a>
             <a class="btn btn-primary" href="https://github.com/GeLith/keyboard-simulator-web/releases/download/v1.2.3/keyboard-simulator-v1.2.3.zip" download="keyboard-simulator-v1.2.3.zip">⬇ 下载 .zip</a>
+            <a class="btn btn-purple" href="https://scriptcat.org/zh-CN/script-show-page/6807" target="_blank">🐱 脚本猫安装</a>
         </div>
 
         <div class="method-tabs">
@@ -403,6 +416,10 @@
             <div class="method-tab" data-method="unpacked">
                 <h3>解压安装</h3>
                 <p>下载 .zip 文件解压，通过加载已解压的扩展程序安装</p>
+            </div>
+            <div class="method-tab" data-method="scriptcat">
+                <h3>🐱 脚本猫安装</h3>
+                <p>安装脚本猫扩展后，一键添加脚本</p>
             </div>
         </div>
 
@@ -464,6 +481,37 @@
             </div>
             <div class="step">
                 <div class="step-num">5</div>
+                <div class="step-content">
+                    <h4>开始使用</h4>
+                    <p>打开任意网页，右上角会出现紫蓝渐变小球，点击即可使用</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="install-steps hidden" id="steps-scriptcat">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h4>安装脚本猫扩展</h4>
+                    <p>如果还没有脚本猫，先前往 <a href="https://scriptcat.org/" target="_blank">scriptcat.org</a> 安装脚本猫浏览器扩展</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h4>打开脚本页面</h4>
+                    <p>点击上方紫色按钮，打开脚本猫商店中的键盘输入模拟器脚本页面</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h4>安装脚本</h4>
+                    <p>在脚本猫商店页面点击「安装」按钮，确认安装即可</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
                 <div class="step-content">
                     <h4>开始使用</h4>
                     <p>打开任意网页，右上角会出现紫蓝渐变小球，点击即可使用</p>
@@ -578,6 +626,7 @@
                 var method = tab.getAttribute('data-method');
                 document.getElementById('steps-crx').classList.toggle('hidden', method !== 'crx');
                 document.getElementById('steps-unpacked').classList.toggle('hidden', method !== 'unpacked');
+                document.getElementById('steps-scriptcat').classList.toggle('hidden', method !== 'scriptcat');
             });
         });
     })();
