@@ -9,13 +9,18 @@
     <style>
         body {
             background:
-                radial-gradient(circle at 20% 50%, rgba(80, 60, 160, 0.35) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(30, 30, 80, 0.5) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(20, 40, 80, 0.4) 0%, transparent 50%),
-                url("img/dark-tech.svg");
-            background-position: center;
-            background-attachment: fixed;
-            background-size: cover;
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.35) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(102, 126, 234, 0.35) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(118, 75, 162, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-size: 200% 200%;
+            animation: gradient-shift 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .page-wrap {
@@ -40,15 +45,16 @@
         .ball-icon {
             width: 90px;
             height: 90px;
-            background: linear-gradient(135deg, #337ab7, #286090);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 40px;
             margin: 0 auto 1em;
-            box-shadow: 0 10px 40px rgba(51, 122, 183, 0.5);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.5);
             animation: ball-float 3s ease-in-out infinite;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
         @keyframes ball-float {
@@ -59,7 +65,7 @@
         .hero-title {
             font-size: 2.8em;
             font-weight: 700;
-            background: linear-gradient(135deg, #7ec8e3, #5cb85c);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -93,14 +99,14 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #337ab7, #286090);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: #fff;
-            box-shadow: 0 4px 20px rgba(51, 122, 183, 0.4);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(51, 122, 183, 0.6);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
         }
 
         .btn-outline {
@@ -155,7 +161,7 @@
         .feature-item:hover {
             transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(51, 122, 183, 0.4);
+            border-color: rgba(102, 126, 234, 0.4);
         }
 
         .feature-icon {
@@ -196,13 +202,13 @@
 
         .demo-step:hover {
             transform: translateY(-5px);
-            border-color: rgba(51, 122, 183, 0.4);
+            border-color: rgba(102, 126, 234, 0.4);
         }
 
         .demo-step .step-num {
             width: 44px;
             height: 44px;
-            background: linear-gradient(135deg, #337ab7, #286090);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -253,8 +259,8 @@
         }
 
         .method-tab.active {
-            background: rgba(51, 122, 183, 0.2);
-            border-color: rgba(51, 122, 183, 0.5);
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.5);
             color: #fff;
         }
 
@@ -297,7 +303,7 @@
             width: 36px;
             height: 36px;
             min-width: 36px;
-            background: linear-gradient(135deg, #337ab7, #286090);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -377,7 +383,7 @@
         <div class="hero-title">键盘输入模拟器</div>
         <div class="hero-desc">有些网页不支持粘贴？没关系。输入文字，点击开始，<br>自动帮你一个一个敲进去。</div>
         <div class="btn-row">
-            <a class="btn btn-green" href="https://github.com/GeLith/keyboard-simulator-web/releases/download/v1.2.0/keyboard-simulator.crx" download="keyboard-simulator.crx">⬇ 下载插件</a>
+            <a class="btn btn-green" href="https://github.com/GeLith/keyboard-simulator-web/releases/download/v1.2.2/keyboard-simulator-v1.2.2.crx" download="keyboard-simulator-v1.2.2.crx">⬇ 下载插件</a>
             <a class="btn btn-outline" href="https://github.com/GeLith/keyboard-simulator-web" target="_blank">GitHub</a>
         </div>
     </div>
@@ -385,8 +391,8 @@
     <div class="card s-card section-card" id="install">
         <div class="section-title">安装教程</div>
         <div class="dl-row">
-            <a class="btn btn-green" href="https://github.com/GeLith/keyboard-simulator-web/releases/download/v1.2.0/keyboard-simulator.crx" download="keyboard-simulator.crx">⬇ 下载 .crx（推荐）</a>
-            <a class="btn btn-primary" href="https://github.com/GeLith/keyboard-simulator-web/archive/refs/heads/main.zip" download="keyboard-simulator.zip">⬇ 下载 .zip</a>
+            <a class="btn btn-green" href="https://github.com/GeLith/keyboard-simulator-web/releases/download/v1.2.2/keyboard-simulator-v1.2.2.crx" download="keyboard-simulator-v1.2.2.crx">⬇ 下载 .crx（推荐）</a>
+            <a class="btn btn-primary" href="https://github.com/GeLith/keyboard-simulator-web/releases/download/v1.2.2/keyboard-simulator-v1.2.2.zip" download="keyboard-simulator-v1.2.2.zip">⬇ 下载 .zip</a>
         </div>
 
         <div class="method-tabs">
@@ -396,7 +402,7 @@
             </div>
             <div class="method-tab" data-method="unpacked">
                 <h3>解压安装</h3>
-                <p>下载源代码解压，通过加载已解压的扩展程序安装</p>
+                <p>下载 .zip 文件解压，通过加载已解压的扩展程序安装</p>
             </div>
         </div>
 
@@ -405,7 +411,7 @@
                 <div class="step-num">1</div>
                 <div class="step-content">
                     <h4>下载 .crx 文件</h4>
-                    <p>点击上方绿色按钮下载 <code>keyboard-simulator.crx</code></p>
+                    <p>点击上方绿色按钮下载 <code>keyboard-simulator-v1.2.2.crx</code></p>
                 </div>
             </div>
             <div class="step">
@@ -430,7 +436,7 @@
                 <div class="step-num">1</div>
                 <div class="step-content">
                     <h4>下载并解压</h4>
-                    <p>点击上方蓝色按钮下载 .zip 文件，解压到任意文件夹</p>
+                    <p>点击上方蓝色按钮下载 <code>keyboard-simulator-v1.2.2.zip</code>，解压到任意文件夹</p>
                 </div>
             </div>
             <div class="step">
@@ -460,13 +466,13 @@
                 <div class="step-num">5</div>
                 <div class="step-content">
                     <h4>开始使用</h4>
-                    <p>打开任意网页，右上角会出现蓝色小球，点击即可使用</p>
+                    <p>打开任意网页，右上角会出现紫蓝渐变小球，点击即可使用</p>
                 </div>
             </div>
         </div>
 
         <div class="tip-box">
-            💡 提示：安装后打开任意网页，点击右上角蓝色小球展开面板，输入文字后点击「开始输入」，然后在延迟时间内切换到目标输入框即可。按 <strong>Alt+K</strong> 可快速切换面板。
+            💡 提示：安装后打开任意网页，点击右上角小球展开面板，输入文字后点击「开始输入」，然后在延迟时间内切换到目标输入框即可。面板可拖动，位置自动保存。
         </div>
     </div>
 
@@ -474,9 +480,9 @@
         <div class="section-title">功能特点</div>
         <div class="features-grid">
             <div class="feature-item">
-                <div class="feature-icon">🔵</div>
+                <div class="feature-icon">🟣</div>
                 <h3>悬浮球设计</h3>
-                <p>右上角蓝色小球，不遮挡内容，点击展开操作面板</p>
+                <p>右上角紫蓝渐变小球，不遮挡内容，点击展开操作面板</p>
             </div>
             <div class="feature-item">
                 <div class="feature-icon">⏱</div>
@@ -496,7 +502,7 @@
             <div class="feature-item">
                 <div class="feature-icon">🖱️</div>
                 <h3>可拖动位置</h3>
-                <p>悬浮球位置随意拖动，不会挡住你要操作的区域</p>
+                <p>悬浮球和面板均可拖动，位置自动保存</p>
             </div>
         </div>
     </div>
@@ -508,7 +514,7 @@
             <div class="demo-step">
                 <div class="step-num">1</div>
                 <h3>点击小球</h3>
-                <p>点击网页右上角的蓝色小球，展开面板</p>
+                <p>点击网页右上角的紫蓝渐变小球，展开面板</p>
             </div>
             <div class="demo-step">
                 <div class="step-num">2</div>
@@ -546,7 +552,7 @@
             particle.style.width = size + 'px';
             particle.style.height = size + 'px';
             particle.style.left = Math.random() * 100 + 'vw';
-            var colors = ['rgba(255,255,255,0.4)', 'rgba(120,119,198,0.3)', 'rgba(51,122,183,0.3)'];
+            var colors = ['rgba(255,255,255,0.4)', 'rgba(102,126,234,0.3)', 'rgba(118,75,162,0.3)'];
             particle.style.background = colors[Math.floor(Math.random() * colors.length)];
             var duration = Math.random() * 20 + 10;
             particle.style.animationDuration = duration + 's';
@@ -572,7 +578,6 @@
                 var method = tab.getAttribute('data-method');
                 document.getElementById('steps-crx').classList.toggle('hidden', method !== 'crx');
                 document.getElementById('steps-unpacked').classList.toggle('hidden', method !== 'unpacked');
-
             });
         });
     })();
