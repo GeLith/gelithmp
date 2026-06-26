@@ -467,6 +467,72 @@ main {
     white-space: nowrap;
 }
 
+.friend-link.dead {
+    position: relative;
+    opacity: 0.7;
+    filter: grayscale(0.3) contrast(1.1);
+    animation: tv-glitch 3s infinite steps(1);
+}
+
+.friend-link.dead::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    background: repeating-linear-gradient(0deg,
+        transparent, transparent 2px,
+        rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.friend-link.dead::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg,
+        transparent 0%, rgba(255, 0, 0, 0.06) 20%, transparent 40%,
+        rgba(0, 100, 255, 0.06) 60%, transparent 80%);
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: screen;
+    animation: tv-glitch-color 2s infinite steps(1);
+}
+
+@keyframes tv-glitch {
+    0% { transform: translate(0); }
+    10% { transform: translate(-1px, 1px); }
+    20% { transform: translate(1px, -1px); }
+    30% { transform: translate(-1px, -1px); }
+    40% { transform: translate(1px, 1px); }
+    50% { transform: translate(0); }
+    55% { transform: translate(-2px, 0); }
+    60% { transform: translate(2px, 0); }
+    65% { transform: translate(-1px, 0); }
+    70% { transform: translate(0); }
+    100% { transform: translate(0); }
+}
+
+@keyframes tv-glitch-color {
+    0% { opacity: 0.4; clip-path: inset(0 0 80% 0); }
+    10% { opacity: 0.6; clip-path: inset(20% 0 60% 0); }
+    20% { opacity: 0.3; clip-path: inset(40% 0 40% 0); }
+    30% { opacity: 0.5; clip-path: inset(60% 0 20% 0); }
+    40% { opacity: 0.2; clip-path: inset(80% 0 0 0); }
+    50% { opacity: 0.4; clip-path: inset(0 0 70% 0); }
+    60% { opacity: 0.6; clip-path: inset(30% 0 50% 0); }
+    70% { opacity: 0.3; clip-path: inset(50% 0 30% 0); }
+    80% { opacity: 0.5; clip-path: inset(10% 0 0 0); }
+    100% { opacity: 0.4; clip-path: inset(0 0 80% 0); }
+}
+
 /* ==================== 粒子、鼠标、页脚 ==================== */
 .particles {
     position: fixed;
@@ -567,6 +633,15 @@ body.night-mode {
 .night-mode .friend-links .friend-link:hover {
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.12);
+}
+
+.night-mode .friend-link.dead {
+    border-color: rgba(255, 100, 100, 0.15);
+    color: #9080a0;
+}
+
+.night-mode .friend-link.dead::after {
+    mix-blend-mode: lighten;
 }
 
 .night-mode .header h1 {
