@@ -1,0 +1,12 @@
+# OpenCode 工具会话数据（非项目代码）
+.omo/
+
+# Playwright MCP 工具数据
+.playwright-mcp/
+
+# 空索引 / 缓存
+.codegraph/
+
+# 备份文件
+*.bak
+*.glassbak
