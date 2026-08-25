@@ -1,0 +1,15 @@
+{
+  "name": "Dongdong's Site",
+  "short_name": "Dongdong",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0c29",
+  "theme_color": "#667eea",
+  "icons": [
+    {
+      "src": "img/1.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
