@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>璧炲姪 - 娲炴礊鐨勭珯鐐?/title>
+    <link href="img/1.ico" rel="icon" type="image/x-icon">
+    <link href="img/1.ico" rel="apple-touch-icon">
+    <link rel="preload" href="css/day.jpg" as="image">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/qpop.css" rel="stylesheet">
+    <style>
+        body {
+            /* 闈欐€佹笎鍙樿儗鏅細鍔ㄧ敾娓愬彉浼氳揩浣挎恫鎬佹护闀滈€愬抚閲嶇畻锛堟帀甯ф牴婧愶級锛屾晠涓嶅姞 animation */
+            background:
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.35) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 200, 124, 0.35) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(100, 210, 255, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-attachment: fixed;
+        }
+
+        body, html { margin: 0; padding: 0; min-height: 100vh; font-family: "Microsoft YaHei", sans-serif; }
+
+        .donate-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2em 1em;
+        }
+
+        /* 鐜荤拑搴曞骇浜ょ粰 .card 绫伙紙js/glass-surface.js 娑叉€佹姌灏勶級锛岃繖閲屽彧绠℃帓鐗?*/
+        .donate-card {
+            padding: 3em;
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .donate-card h1 {
+            color: #fff;
+            font-size: 2.2em;
+            margin-bottom: 0.3em;
+        }
+
+        .donate-card p {
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 2em;
+            font-size: 1.1em;
+        }
+
+        .qr-grid {
+            display: flex;
+            gap: 2em;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .qr-item {
+            flex: 1;
+            min-width: 200px;
+            max-width: 280px;
+        }
+
+        .qr-item h3 {
+            color: #fff;
+            margin-bottom: 1em;
+            font-size: 1.2em;
+        }
+
+        .qr-item img {
+            width: 100%;
+            border-radius: 16px;
+            border: 2px solid rgba(255,255,255,0.15);
+            background: #fff;
+            padding: 8px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 2em;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="donate-wrap">
+        <div class="donate-card card">
+            <h1>璧炲姪鏀寔</h1>
+            <p>濡傛灉鎮ㄨ寰楄繖涓伐鍏峰浣犳湁甯姪锛屾杩庤禐鍔╂敮鎸侊綖</p>
+            <div class="qr-grid">
+                <div class="qr-item">
+                    <h3>寰俊</h3>
+                    <img src="img/alipay.jpg" alt="寰俊鏀舵鐮?>
+                </div>
+                <div class="qr-item">
+                    <h3>鏀粯瀹?/h3>
+                    <img src="img/wechat-pay.jpg" alt="鏀粯瀹濇敹娆剧爜">
+                </div>
+            </div>
+            <a class="back-link" href="index.html">鈫?杩斿洖涓婚〉</a>
+        </div>
+    </div>
+    <script src="js/qpop.js"></script>
+    <script src="js/glass-surface.js"></script>
+</body>
+</html>

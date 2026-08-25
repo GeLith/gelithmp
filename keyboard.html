@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>键盘输入模拟器 - 解决网页无法粘贴的烦恼</title>
+    <link href="img/1.ico" rel="icon" type="image/x-icon">
+    <link rel="preload" href="css/day.jpg" as="image">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/qpop.css" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #ffffff;
+            --accent-hover: rgba(255, 255, 255, 0.85);
+            --accent-tint: rgba(255, 255, 255, 0.12);
+            --ink: #ffffff;
+            --ink-soft: rgba(255, 255, 255, 0.72);
+            --ink-faint: rgba(255, 255, 255, 0.5);
+            --glass: rgba(255, 255, 255, 0.06);
+            --glass-line: rgba(255, 255, 255, 0.12);
+        }
+
+        body {
+            /* 与主页共用 main.css 壁纸（css/day.jpg）：
+                原先的动画渐变在玻璃卡片背后每帧变化，
+                会迫使 SVG 液态滤镜持续重算，是掉帧根源 */
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .page-wrap {
+            width: 100%;
+            padding: 3em 1em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2em;
+        }
+
+        .s-card {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .hero-card {
+            text-align: center;
+            padding: 4em 3em;
+        }
+
+        .ball-icon {
+            width: 92px;
+            height: 92px;
+            background: linear-gradient(135deg, #48484f, #1d1d1f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            margin: 0 auto 1.4em;
+            box-shadow: 0 14px 44px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            animation: ball-float 3.6s ease-in-out infinite;
+        }
+
+        .ball-icon svg {
+            width: 46px;
+            height: 46px;
+        }
+
+        @keyframes ball-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-14px); }
+        }
+
+        .hero-kicker {
+            display: inline-block;
+            font-size: 0.78em;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1.1em;
+            padding: 0.45em 1em;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .hero-title {
+            font-size: 2.8em;
+            font-weight: 750;
+            letter-spacing: -0.01em;
+            background: linear-gradient(135deg, #ffffff, rgba(255, 255, 255, 0.65));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5em;
+        }
+
+        .hero-desc {
+            color: var(--ink-soft);
+            font-size: 1.12em;
+            line-height: 1.65;
+            margin: 0 auto 2.2em;
+            max-width: 30em;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 1em;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.9em 2.1em;
+            border-radius: 50px;
+            font-size: 1em;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5em;
+            /* 液态玻璃：js/glass-surface.js 会为每个 .btn 生成专属位移滤镜 */
+            position: relative;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: var(--filter-id, blur(8px) saturate(1.4));
+            -webkit-backdrop-filter: var(--filter-id, blur(8px) saturate(1.4));
+        }
+
+        .btn svg {
+            width: 1.15em;
+            height: 1.15em;
+            flex-shrink: 0;
+        }
+
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.30);
+            color: #1d1d1f;
+            box-shadow: 0 6px 22px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.45);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-outline {
+            background: var(--glass);
+            color: var(--ink);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-outline:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.13);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn:focus-visible,
+        .method-tab:focus-visible,
+        a:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        .section-card {
+            padding: 3em;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 1.4em;
+        }
+
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 44px;
+            height: 3px;
+            border-radius: 2px;
+            background: var(--accent);
+            margin: 0.6em auto 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2em;
+        }
+
+        .feature-item {
+            background: var(--glass);
+            border: 1px solid var(--glass-line);
+            border-radius: 16px;
+            padding: 1.8em 1.5em;
+            text-align: center;
+            transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.09);
+            border-color: rgba(255, 255, 255, 0.45);
+        }
+
+        .feature-icon {
+            color: var(--accent);
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0.7em;
+        }
+
+        .feature-icon svg {
+            width: 2.4em;
+            height: 2.4em;
+        }
+
+        .feature-item h3 {
+            color: var(--ink);
+            font-size: 1.1em;
+            margin-bottom: 0.5em;
+        }
+
+        .feature-item p {
+            color: var(--ink-soft);
+            font-size: 0.85em;
+            line-height: 1.55;
+        }
+
+        .demo-steps {
+            display: flex;
+            gap: 1.5em;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .demo-step {
+            flex: 1;
+            min-width: 180px;
+            max-width: 220px;
+            text-align: center;
+            padding: 2em 1.5em;
+            background: var(--glass);
+            border: 1px solid var(--glass-line);
+            border-radius: 16px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .demo-step:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.45);
+        }
+
+        .demo-step .step-num {
+            width: 44px;
+            height: 44px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #1d1d1f;
+            margin: 0 auto 1em;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+        }
+
+        .demo-step h3 {
+            color: var(--ink);
+            font-size: 1.1em;
+            margin-bottom: 0.5em;
+        }
+
+        .demo-step p {
+            color: var(--ink-soft);
+            font-size: 0.85em;
+            line-height: 1.55;
+        }
+
+        .dl-row {
+            display: flex;
+            gap: 1em;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2em;
+        }
+
+        .method-tabs {
+            display: flex;
+            gap: 0.6em;
+            margin-bottom: 1.5em;
+        }
+
+        .method-tab {
+            flex: 1;
+            padding: 1.1em 1em;
+            text-align: center;
+            border-radius: 14px;
+            background: var(--glass);
+            border: 1px solid var(--glass-line);
+            color: var(--ink-faint);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            user-select: none;
+        }
+
+        .method-tab:hover {
+            border-color: rgba(255, 255, 255, 0.28);
+        }
+
+        .method-tab.active {
+            background: var(--accent-tint);
+            border-color: var(--accent);
+            color: var(--ink);
+        }
+
+        .mt-icon {
+            color: var(--accent);
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0.5em;
+        }
+
+        .mt-icon svg {
+            width: 1.9em;
+            height: 1.9em;
+        }
+
+        .method-tab h3 {
+            font-size: 1em;
+            margin-bottom: 0.3em;
+        }
+
+        .method-tab p {
+            font-size: 0.8em;
+            opacity: 0.75;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--accent);
+            color: #1d1d1f;
+            font-size: 0.7em;
+            padding: 0.15em 0.6em;
+            border-radius: 10px;
+            margin-left: 0.4em;
+            vertical-align: middle;
+        }
+
+        .install-steps {
+            display: block;
+        }
+
+        .install-steps.hidden {
+            display: none;
+        }
+
+        .step {
+            display: flex;
+            gap: 1em;
+            margin-bottom: 1.2em;
+            align-items: flex-start;
+        }
+
+        .step .step-num {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #1d1d1f;
+            font-size: 0.9em;
+            flex-shrink: 0;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+        }
+
+        .step-content h4 {
+            color: var(--ink);
+            font-size: 1em;
+            margin-bottom: 0.3em;
+        }
+
+        .step-content p {
+            color: var(--ink-soft);
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+
+        .step-content code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.15em 0.5em;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .tip-box {
+            display: flex;
+            gap: 0.7em;
+            align-items: flex-start;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1em 1.2em;
+            margin-top: 1.5em;
+            color: var(--ink-soft);
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+
+        .tip-box svg {
+            width: 1.35em;
+            height: 1.35em;
+            color: var(--accent);
+            flex-shrink: 0;
+            margin-top: 0.1em;
+        }
+
+        .footer-links {
+            text-align: center;
+            padding: 1.5em;
+            color: var(--ink-faint);
+            font-size: 0.85em;
+        }
+
+        .footer-links a {
+            color: var(--ink-soft);
+            text-decoration: none;
+            margin: 0 0.8em;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--ink);
+        }
+
+        /* 二级卡片 / 二级按钮：液态玻璃 + 边缘扭曲（与大卡片同款）。
+           父级 .card 的模糊已移至其 ::before（见 main.css），
+           因此后代 backdrop-filter 能真正折射页面壁纸，边缘扭曲与大卡片一致 */
+        .feature-item,
+        .demo-step,
+        .method-tab,
+        .tip-box {
+            position: relative;
+            backdrop-filter: var(--filter-id, blur(6px) saturate(1.4));
+            -webkit-backdrop-filter: var(--filter-id, blur(6px) saturate(1.4));
+            will-change: backdrop-filter;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            /* Hero 内部元素错峰弹入（卡片级通用 Q 弹动效见 css/qpop.css） */
+            .hero-card > *:not(.glass-surface__filter) {
+                opacity: 0;
+                transform: translateY(16px);
+                animation: heroIn 0.75s cubic-bezier(0.34, 1.85, 0.64, 1) forwards;
+            }
+            .hero-card > *:nth-child(1) { animation-delay: 0.05s; }
+            .hero-card > *:nth-child(2) { animation-delay: 0.13s; }
+            .hero-card > *:nth-child(3) { animation-delay: 0.21s; }
+            .hero-card > *:nth-child(4) { animation-delay: 0.29s; }
+            .hero-card > *:nth-child(5) { animation-delay: 0.37s; }
+        }
+
+        @keyframes heroIn {
+            to { opacity: 1; transform: none; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2em; }
+            .features-grid { grid-template-columns: 1fr; }
+            .hero-card { padding: 2em 1.5em; }
+            .section-card { padding: 2em 1.5em; }
+            .btn-row { flex-direction: column; align-items: center; }
+            .method-tabs { flex-direction: column; }
+            .dl-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-wrap">
+    <div class="card s-card hero-card">
+        <div class="ball-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2.5" y="6.5" width="19" height="11" rx="2.5"/>
+                <line x1="6" y1="10" x2="6" y2="10.01"/>
+                <line x1="10" y1="10" x2="10" y2="10.01"/>
+                <line x1="14" y1="10" x2="14" y2="10.01"/>
+                <line x1="18" y1="10" x2="18" y2="10.01"/>
+                <line x1="8" y1="14.5" x2="16" y2="14.5"/>
+            </svg>
+        </div>
+        <div class="hero-kicker">Chrome 扩展 · 免费开源</div>
+        <div class="hero-title">键盘输入模拟器</div>
+        <div class="hero-desc">有些网页不支持粘贴？没关系。输入文字，点击开始，<br>自动帮你一个一个敲进去。</div>
+        <div class="btn-row">
+            <a class="btn btn-primary" href="https://scriptcat.org/zh-CN/script-show-page/6807" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 10 L6 6 L9 9"/>
+                    <path d="M18 10 L18 6 L15 9"/>
+                    <path d="M6 10 Q6 18 12 18 Q18 18 18 10 Q18 7 12 7 Q6 7 6 10 Z"/>
+                    <circle cx="9.5" cy="12" r="1"/>
+                    <circle cx="14.5" cy="12" r="1"/>
+                    <path d="M10.5 15 Q12 16 13.5 15"/>
+                </svg>
+                脚本猫安装（推荐）
+            </a>
+            <a class="btn btn-outline" href="https://github.com/GeLith/keyboard-simulator-web/releases/download/v1.3/keyboard-simulator-v1.3.crx" download="keyboard-simulator-v1.3.crx">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3 V15"/>
+                    <path d="M7 10.5 L12 15.5 L17 10.5"/>
+                    <path d="M4 19 H20"/>
+                </svg>
+                下载插件
+            </a>
+            <a class="btn btn-outline" href="https://github.com/GeLith/keyboard-simulator-web" target="_blank">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/>
+                </svg>
+                GitHub
+            </a>
+        </div>
+    </div>
+
+    <div class="card s-card section-card" id="install">
+        <div class="section-title">安装教程</div>
+        <div class="dl-row">
+            <a class="btn btn-primary" href="https://scriptcat.org/zh-CN/script-show-page/6807" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 10 L6 6 L9 9"/>
+                    <path d="M18 10 L18 6 L15 9"/>
+                    <path d="M6 10 Q6 18 12 18 Q18 18 18 10 Q18 7 12 7 Q6 7 6 10 Z"/>
+                    <circle cx="9.5" cy="12" r="1"/>
+                    <circle cx="14.5" cy="12" r="1"/>
+                    <path d="M10.5 15 Q12 16 13.5 15"/>
+                </svg>
+                脚本猫安装（推荐）
+            </a>
+            <a class="btn btn-outline" href="https://github.com/GeLith/keyboard-simulator-web/releases/download/v1.3/keyboard-simulator-v1.3.crx" download="keyboard-simulator-v1.3.crx">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3 V15"/>
+                    <path d="M7 10.5 L12 15.5 L17 10.5"/>
+                    <path d="M4 19 H20"/>
+                </svg>
+                下载 .crx
+            </a>
+            <a class="btn btn-outline" href="https://github.com/GeLith/keyboard-simulator-web/releases/download/v1.3/keyboard-simulator-v1.3.zip" download="keyboard-simulator-v1.3.zip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3 V15"/>
+                    <path d="M7 10.5 L12 15.5 L17 10.5"/>
+                    <path d="M4 19 H20"/>
+                </svg>
+                下载 .zip
+            </a>
+        </div>
+
+        <div class="method-tabs">
+            <div class="method-tab glass-2 active" data-method="scriptcat">
+                <div class="mt-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 10 L6 6 L9 9"/>
+                        <path d="M18 10 L18 6 L15 9"/>
+                        <path d="M6 10 Q6 18 12 18 Q18 18 18 10 Q18 7 12 7 Q6 7 6 10 Z"/>
+                        <circle cx="9.5" cy="12" r="1"/>
+                        <circle cx="14.5" cy="12" r="1"/>
+                        <path d="M10.5 15 Q12 16 13.5 15"/>
+                    </svg>
+                </div>
+                <h3>脚本猫安装 <span class="badge">推荐</span></h3>
+                <p>安装脚本猫扩展后，一键添加脚本</p>
+            </div>
+            <div class="method-tab glass-2" data-method="crx">
+                <div class="mt-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3 V21"/>
+                        <path d="M3 12 H21"/>
+                        <polyline points="9 6 12 3 15 6"/>
+                        <polyline points="9 18 12 21 15 18"/>
+                        <polyline points="6 9 3 12 6 15"/>
+                        <polyline points="18 9 21 12 18 15"/>
+                    </svg>
+                </div>
+                <h3>拖拽安装</h3>
+                <p>下载 .crx 文件，直接拖到扩展管理页面</p>
+            </div>
+            <div class="method-tab glass-2" data-method="unpacked">
+                <div class="mt-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 7 H13 L21 14 V20 H3 Z"/>
+                        <path d="M12 11 V16"/>
+                        <polyline points="9.5 13.5 12 16 14.5 13.5"/>
+                    </svg>
+                </div>
+                <h3>解压安装</h3>
+                <p>下载 .zip 文件解压，通过加载已解压的扩展程序安装</p>
+            </div>
+        </div>
+
+        <div class="install-steps hidden" id="steps-crx">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h4>下载 .crx 文件</h4>
+                    <p>点击上方下载按钮下载 <code>keyboard-simulator-v1.3.crx</code></p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h4>打开扩展管理页面</h4>
+                    <p><strong>Chrome：</strong>地址栏输入 <code>chrome://extensions/</code> 回车，开启右上角「开发者模式」</p>
+                    <p><strong>Edge：</strong>地址栏输入 <code>edge://extensions/</code> 回车，开启左下角「开发人员模式」</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h4>拖拽安装</h4>
+                    <p>将 .crx 文件直接拖入扩展管理页面，点击「添加扩展程序」确认</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="install-steps hidden" id="steps-unpacked">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h4>下载并解压</h4>
+                    <p>点击上方下载按钮下载 <code>keyboard-simulator-v1.3.zip</code>，解压到任意文件夹</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h4>打开扩展管理页面</h4>
+                    <p><strong>Chrome：</strong>地址栏输入 <code>chrome://extensions/</code> 回车</p>
+                    <p><strong>Edge：</strong>地址栏输入 <code>edge://extensions/</code> 回车</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h4>开启开发者模式</h4>
+                    <p><strong>Chrome：</strong>开启右上角「开发者模式」开关</p>
+                    <p><strong>Edge：</strong>开启左下角「开发人员模式」开关</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                    <h4>加载扩展</h4>
+                    <p>点击「加载已解压的扩展程序」，选择解压后的文件夹</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">5</div>
+                <div class="step-content">
+                    <h4>开始使用</h4>
+                    <p>打开任意网页，右上角会出现蓝色小球，点击即可使用</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="install-steps" id="steps-scriptcat">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h4>安装脚本猫扩展</h4>
+                    <p>如果还没有脚本猫，先前往 <a href="https://scriptcat.org/" target="_blank">scriptcat.org</a> 安装脚本猫浏览器扩展</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h4>打开脚本页面</h4>
+                    <p>点击上方按钮，打开脚本猫商店中的键盘输入模拟器脚本页面</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h4>安装脚本</h4>
+                    <p>在脚本猫商店页面点击「安装」按钮，确认安装即可</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                    <h4>开始使用</h4>
+                    <p>打开任意网页，右上角会出现蓝色小球，点击即可使用</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box glass-2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.5 18 H14.5"/>
+                <path d="M10.5 21 H13.5"/>
+                <path d="M12 3 A6 6 0 0 1 18 9 A5 5 0 0 1 13 14 H11 A5 5 0 0 1 6 9 A6 6 0 0 1 12 3 Z"/>
+            </svg>
+            <span>提示：安装后打开任意网页，点击右上角小球展开面板，输入文字后点击「开始输入」，然后在延迟时间内切换到目标输入框即可。面板可拖动，位置自动保存。</span>
+        </div>
+    </div>
+
+    <div class="card s-card section-card">
+        <div class="section-title">功能特点</div>
+        <div class="features-grid">
+            <div class="feature-item glass-2">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="7.5"/>
+                        <circle cx="12" cy="12" r="2.6" fill="currentColor" stroke="none"/>
+                    </svg>
+                </div>
+                <h3>悬浮球设计</h3>
+                <p>右上角蓝色小球，不遮挡内容，点击展开操作面板</p>
+            </div>
+            <div class="feature-item glass-2">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12.5" r="8"/>
+                        <path d="M12 12.5 V8.5"/>
+                        <path d="M9.5 3.5 H14.5"/>
+                    </svg>
+                </div>
+                <h3>延迟输入</h3>
+                <p>可设置开始延迟，给你时间切换到目标输入框</p>
+            </div>
+            <div class="feature-item glass-2">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2 L4 14 H11 L10 22 L20 9 H13 Z"/>
+                    </svg>
+                </div>
+                <h3>速度可调</h3>
+                <p>字符间隔自由设置，快慢由你决定</p>
+            </div>
+            <div class="feature-item glass-2">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 4 4 9 9 14"/>
+                        <path d="M4 9 H15 Q20 9 20 14 V20"/>
+                    </svg>
+                </div>
+                <h3>支持换行</h3>
+                <p>多行文本轻松输入，自动处理换行符</p>
+            </div>
+            <div class="feature-item glass-2">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3 V21"/>
+                        <path d="M3 12 H21"/>
+                        <polyline points="9 6 12 3 15 6"/>
+                        <polyline points="9 18 12 21 15 18"/>
+                        <polyline points="6 9 3 12 6 15"/>
+                        <polyline points="18 9 21 12 18 15"/>
+                    </svg>
+                </div>
+                <h3>可拖动位置</h3>
+                <p>悬浮球和面板均可拖动，位置自动保存</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card s-card section-card">
+        <div class="section-title">三步搞定</div>
+        <p style="text-align:center;color:rgba(255,255,255,0.5);margin-bottom:2em;">简单到不需要说明书</p>
+        <div class="demo-steps">
+            <div class="demo-step glass-2">
+                <div class="step-num">1</div>
+                <h3>点击小球</h3>
+                <p>点击网页右上角的蓝色小球，展开面板</p>
+            </div>
+            <div class="demo-step glass-2">
+                <div class="step-num">2</div>
+                <h3>输入文字</h3>
+                <p>粘贴或输入你要模拟的文字，设置延迟时间</p>
+            </div>
+            <div class="demo-step glass-2">
+                <div class="step-num">3</div>
+                <h3>点击开始</h3>
+                <p>在延迟时间内切换到目标输入框，自动开始输入</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-links">
+        <a href="index.html">主页</a>
+        <a href="https://github.com/GeLith/keyboard-simulator-web" target="_blank">GitHub</a>
+        <a href="#install">安装教程</a>
+        <a href="https://github.com/GeLith/keyboard-simulator-web/issues" target="_blank">反馈</a>
+        <p style="margin-top:0.8em;">Made by GeLith | MIT License</p>
+    </div>
+</div>
+
+<script>
+    (function() {
+        var tabs = document.querySelectorAll('.method-tab');
+        tabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                tabs.forEach(function(t) { t.classList.remove('active'); });
+                tab.classList.add('active');
+                var method = tab.getAttribute('data-method');
+                document.getElementById('steps-crx').classList.toggle('hidden', method !== 'crx');
+                document.getElementById('steps-unpacked').classList.toggle('hidden', method !== 'unpacked');
+                document.getElementById('steps-scriptcat').classList.toggle('hidden', method !== 'scriptcat');
+            });
+        });
+    })();
+
+</script>
+<script src="js/qpop.js"></script>
+    <script src="js/glass-surface.js"></script>
+</body>
+</html>
