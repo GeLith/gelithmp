@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>系统清理助手 - 轻若分毫的 Windows 系统清理工具</title>
+<style>
+  @property --ang { syntax:'<angle>'; initial-value:0deg; inherits:false; }
+
+  :root {
+    --page-dark:#000; --card-dark:#161617;
+    --page-light:#f5f5f7; --surface:#fff;
+    --ink:#1d1d1f; --ink-2:#6e6e73; --ink-3:#86868b;
+    --white:#f5f5f7; --hairline:#d2d2d7; --hairline-dark:#424245;
+    --blue:#0071e3; --blue-hover:#0077ed; --link-dark:#2997ff;
+    --radius-card:28px; --radius-img:18px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",
+      "PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    background:var(--page-dark); color:var(--ink);
+    -webkit-font-smoothing:antialiased; line-height:1.55;
+    overflow-x:hidden;
+  }
+  .wrap { max-width:1024px; margin:0 auto; padding:0 28px; }
+  section { scroll-margin-top:64px; }
+
+  /* 噪点质感 (ReactBits · Noise) */
+  body::after {
+    content:""; position:fixed; inset:0; z-index:2000; pointer-events:none; opacity:.032;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position:fixed; inset:0 0 auto; z-index:100; height:48px;
+    background:rgba(22,22,23,.8);
+    backdrop-filter:saturate(180%) blur(20px);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+  }
+  .nav-inner {
+    max-width:1024px; margin:0 auto; padding:0 28px; height:100%;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .nav-brand { color:var(--white); font-size:14px; font-weight:600; text-decoration:none; }
+  .nav-links { display:flex; gap:34px; }
+  .nav-links a { color:rgba(245,245,247,.82); font-size:12px; text-decoration:none; transition:color .2s; }
+  .nav-links a:hover { color:#fff; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding:172px 0 96px; text-align:center; color:#fff;
+    background:
+      radial-gradient(1100px 480px at 50% -8%, rgba(41,151,255,.16), transparent 62%),
+      var(--page-dark);
+  }
+  .hero-eyebrow {
+    display:inline-block; font-size:13px; font-weight:600; color:var(--link-dark);
+    letter-spacing:.02em; margin-bottom:20px; min-height:1.4em;
+  }
+  .hero h1 {
+    font-size:clamp(52px,8vw,84px); line-height:1.06; font-weight:700; letter-spacing:-.015em;
+  }
+  /* Split Text 字符 */
+  .ch { display:inline-block; opacity:0; transform:translateY(.55em) rotate(5deg); }
+  .split-in .ch { opacity:1; transform:none; transition:opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+
+  .hero .tagline {
+    margin-top:10px; font-size:clamp(26px,3.6vw,40px); font-weight:700; letter-spacing:-.01em;
+    background:linear-gradient(96deg,#2997ff 4%,#a5b8ff 38%,#63e0c8 66%,#2997ff 96%);
+    background-size:220% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:gradFlow 7s linear infinite;   /* Gradient Text · 流动渐变 */
+  }
+  @keyframes gradFlow { to { background-position:220% 0; } }
+
+  .hero .sub { max-width:600px; margin:26px auto 0; font-size:19px; color:var(--ink-3); }
+  .hero-cta { margin-top:38px; display:flex; gap:26px; justify-content:center; align-items:center; flex-wrap:wrap; }
+
+  /* 药丸按钮 · Star Border (旋转流光描边) + Magnet (JS) */
+  .pill-wrap { position:relative; display:inline-block; border-radius:980px; }
+  .pill-wrap::before {
+    content:""; position:absolute; inset:0; border-radius:inherit; padding:1.6px;
+    background:conic-gradient(from var(--ang), transparent 0 62%, #4da3ff 80%, #9ecbff 88%, transparent 100%);
+    -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor; mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask-composite:exclude;
+    animation:angSpin 3.2s linear infinite; pointer-events:none;
+  }
+  @keyframes angSpin { to { --ang:360deg; } }
+  .pill {
+    position:relative; display:inline-block; background:var(--blue); color:#fff;
+    border-radius:980px; padding:13px 30px; font-size:16px; font-weight:500;
+    text-decoration:none; transition:background .2s, transform .18s ease-out;
+  }
+  .pill:hover { background:var(--blue-hover); }
+  .tlink { color:var(--link-dark); font-size:16px; text-decoration:none; }
+  .tlink:hover { text-decoration:underline; }
+  .tlink::after { content:" ›"; }
+
+  /* stats */
+  .stats { max-width:900px; margin:88px auto 0; display:flex; justify-content:center; }
+  .stat { flex:1; padding:0 20px; }
+  .stat + .stat { border-left:1px solid var(--hairline-dark); }
+  .stat b { display:block; font-size:clamp(30px,3.4vw,44px); font-weight:650; letter-spacing:-.02em; color:#fff; font-variant-numeric:tabular-nums; }
+  .stat span { display:block; margin-top:6px; font-size:12.5px; color:var(--ink-3); }
+
+  /* ---------- Ticker (Infinite Marquee) ---------- */
+  .ticker {
+    overflow:hidden; border-top:1px solid var(--hairline-dark); border-bottom:1px solid var(--hairline-dark);
+    padding:15px 0; background:rgba(22,22,23,.5);
+  }
+  .ticker-track { display:flex; width:max-content; animation:marquee 26s linear infinite; }
+  .ticker:hover .ticker-track { animation-play-state:paused; }
+  .ticker-track span {
+    padding:0 26px; font-size:13px; letter-spacing:.22em; color:#6e6e73; white-space:nowrap;
+  }
+  .ticker-track span i { font-style:normal; color:var(--link-dark); padding-right:52px; }
+  @keyframes marquee { to { transform:translateX(-50%); } }
+
+  /* ---------- Sections ---------- */
+  .sec { padding:130px 0; }
+  .sec-head { text-align:center; max-width:720px; margin:0 auto 66px; }
+  .sec-head h2 { font-size:clamp(36px,5vw,54px); font-weight:700; letter-spacing:-.015em; line-height:1.1; }
+  .sec-head p { margin-top:16px; font-size:18px; color:var(--ink-2); }
+  .dark-text { color:#fff; } .dark-sub { color:#86868b; }
+  .rotor { display:inline-block; position:relative; min-width:3.2em; text-align:left; color:var(--link-dark); font-weight:650; }
+  .rotor b { position:absolute; left:0; top:0; font-weight:650; opacity:0; transform:translateY(.7em); transition:.45s cubic-bezier(.22,1,.36,1); white-space:nowrap; }
+  .rotor b.on { opacity:1; transform:none; }
+  .rotor b.off { opacity:0; transform:translateY(-.7em); }
+  .rotor i { font-style:normal; visibility:hidden; }
+
+  /* ---------- Screenshot · Tilted Card + Glare Hover ---------- */
+  .sec-shot { background:var(--page-dark); }
+  .shot-tilt { perspective:1400px; max-width:960px; margin:0 auto; }
+  .shot-wrap {
+    position:relative; border-radius:var(--radius-img); overflow:hidden;
+    transform-style:preserve-3d; will-change:transform;
+    transition:transform .5s cubic-bezier(.22,1,.36,1);
+  }
+  .shot-wrap::before {
+    content:""; position:absolute; inset:-8% -12%; z-index:0;
+    background:radial-gradient(58% 62% at 50% 46%, rgba(41,151,255,.30), transparent 70%);
+    filter:blur(8px); pointer-events:none;
+  }
+  .shot-wrap img {
+    position:relative; z-index:1; width:100%; display:block; border-radius:var(--radius-img);
+    box-shadow:0 0 0 .5px rgba(255,255,255,.14), 0 42px 90px -28px rgba(0,0,0,.85);
+  }
+  /* Glare Hover 扫光 */
+  .shot-wrap::after {
+    content:""; position:absolute; inset:0; z-index:2; border-radius:var(--radius-img);
+    background:linear-gradient(105deg, transparent 42%, rgba(255,255,255,.16) 50%, transparent 58%);
+    transform:translateX(-160%); transition:transform .9s ease; pointer-events:none;
+  }
+  .shot-wrap:hover::after { transform:translateX(160%); }
+
+  /* ---------- Bento · Spotlight Card ---------- */
+  .bento { display:grid; grid-template-columns:repeat(6,1fr); gap:18px; }
+  .cell {
+    position:relative; overflow:hidden;
+    grid-column:span 2; background:var(--card-dark); border-radius:var(--radius-card);
+    padding:42px 38px; min-height:250px; display:flex; flex-direction:column;
+    transition:transform .25s ease;
+  }
+  .cell::before {
+    content:""; position:absolute; inset:0; border-radius:inherit; opacity:0; transition:opacity .35s;
+    background:radial-gradient(340px circle at var(--mx,50%) var(--my,50%), rgba(41,151,255,.14), transparent 62%);
+    pointer-events:none;
+  }
+  .cell:hover::before { opacity:1; }
+  .cell:hover { transform:translateY(-4px); }
+  .cell > * { position:relative; }
+  .cell.w3 { grid-column:span 3; } .cell.w4 { grid-column:span 4; } .cell.w6 { grid-column:span 6; }
+  .cell .k { font-size:12.5px; font-weight:600; letter-spacing:.04em; color:var(--link-dark); margin-bottom:auto; }
+  .cell h3 { font-size:24px; font-weight:700; color:#fff; margin:26px 0 10px; letter-spacing:-.01em; }
+  .cell p { font-size:14.5px; color:#a1a1a6; }
+  .cell.wide-row { flex-direction:row; align-items:center; gap:48px; min-height:190px; }
+  .cell.wide-row .txt { flex:1; }
+  .cell.wide-row h3 { margin-top:0; }
+  /* bento 交错入场 */
+  .bento .cell { opacity:0; transform:translateY(34px); }
+  .bento.on .cell { opacity:1; transform:none; transition:opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+  .bento.on .cell:nth-child(1){transition-delay:.02s}.bento.on .cell:nth-child(2){transition-delay:.1s}
+  .bento.on .cell:nth-child(3){transition-delay:.18s}.bento.on .cell:nth-child(4){transition-delay:.26s}
+  .bento.on .cell:nth-child(5){transition-delay:.34s}.bento.on .cell:nth-child(6){transition-delay:.42s}
+
+  /* ---------- Compare (light) ---------- */
+  .sec-compare { background:var(--page-light); }
+  .compare {
+    width:100%; max-width:860px; margin:0 auto;
+    border-collapse:collapse; background:var(--surface);
+    border-radius:var(--radius-img); overflow:hidden;
+    box-shadow:0 2px 12px rgba(0,0,0,.05); font-size:15px;
+  }
+  .compare th, .compare td { padding:17px 26px; text-align:left; }
+  .compare th { font-size:12.5px; font-weight:600; color:var(--ink-2); border-bottom:1px solid var(--hairline); }
+  .compare tr + tr td { border-top:1px solid #e8e8ed; }
+  .compare td:first-child { color:var(--ink); font-weight:600; width:32%; }
+  .compare .old { color:var(--ink-3); }
+  .compare .new { color:var(--ink); font-weight:600; }
+
+  /* ---------- FAQ (light, 修复深色文字落在黑底的问题) ---------- */
+  .faq { max-width:720px; margin:0 auto; }
+  .qa { padding:30px 4px; border-bottom:1px solid var(--hairline); }
+  .qa:first-of-type { border-top:1px solid var(--hairline); }
+  .qa h4 { font-size:19px; font-weight:650; margin-bottom:10px; letter-spacing:-.01em; color:var(--ink); }
+  .qa p { font-size:15px; color:var(--ink-2); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    background:var(--page-light); border-top:1px solid var(--hairline);
+    padding:44px 0 60px; font-size:12px; color:var(--ink-3);
+  }
+  .foot-grid {
+    max-width:1024px; margin:0 auto; padding:0 28px 34px;
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:28px;
+    border-bottom:1px solid var(--hairline);
+  }
+  .foot-grid h5 { font-size:12px; color:var(--ink); font-weight:600; margin-bottom:10px; }
+  .foot-grid a { display:block; color:var(--ink-2); text-decoration:none; padding:3.5px 0; }
+  .foot-grid a:hover { color:var(--ink); text-decoration:underline; }
+  .foot-base {
+    max-width:1024px; margin:0 auto; padding:22px 28px 0;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  .foot-base a { color:var(--ink-2); text-decoration:none; }
+  .foot-base a:hover { text-decoration:underline; }
+
+  /* ---------- Reveal 基础 ---------- */
+  .rv { opacity:0; transform:translateY(26px); transition:opacity .8s ease, transform .8s ease; }
+  .rv.on { opacity:1; transform:none; }
+  .rv h2 { filter:blur(10px); transition:filter .9s ease .05s; }   /* Blur Text */
+  .rv.on h2 { filter:blur(0); }
+
+  /* 点击火花粒子 */
+  .spark { position:fixed; z-index:3000; width:5px; height:5px; border-radius:1px; pointer-events:none; }
+
+  @media (prefers-reduced-motion:reduce) {
+    *, *::before, *::after { animation:none !important; transition:none !important; }
+    .rv, .bento .cell, .ch { opacity:1 !important; transform:none !important; }
+    .rv h2 { filter:none !important; }
+  }
+  @media (max-width:760px) {
+    .nav-links a:not(.keep) { display:none; }
+    .hero { padding-top:140px; }
+    .stats { flex-direction:column; gap:26px; }
+    .stat + .stat { border-left:none; border-top:1px solid var(--hairline-dark); padding-top:22px; }
+    .cell, .cell.w3, .cell.w4 { grid-column:span 6; }
+    .cell.wide-row { flex-direction:column; align-items:flex-start; gap:0; }
+    .sec { padding:90px 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-brand" href="#">系统清理助手</a>
+    <div class="nav-links">
+      <a href="#features">功能</a>
+      <a href="#shot">概览</a>
+      <a href="#compare">架构对比</a>
+      <a href="#faq">常见问题</a>
+      <a class="keep" href="https://github.com/GeLith/releases" target="_blank">下载</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <span class="hero-eyebrow" data-decrypt>全新 v1.0.0 · 基于 Tauri 2 与 Rust 打造</span>
+    <h1 id="heroTitle" data-split>系统清理助手</h1>
+    <div class="tagline">轻若分毫。净，至毫厘。</div>
+    <p class="sub">垃圾清理、电脑加速、启动项管理、文件粉碎机——<br>如今，这一切被装进 1.74&nbsp;MB。</p>
+    <div class="hero-cta">
+      <span class="pill-wrap" data-magnet><a class="pill" href="https://github.com/GeLith/releases" target="_blank">免费下载</a></span>
+      <a class="tlink" href="#features">进一步了解</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b data-count="1.74" data-decimals="2">0</b><span>安装包体积 (MB)</span></div>
+      <div class="stat"><b data-count="97" data-prefix="-" data-suffix="%">0</b><span>对比 Electron 方案</span></div>
+      <div class="stat"><b data-count="6">0</b><span>大功能模块</span></div>
+      <div class="stat"><b data-count="100" data-suffix="%">0</b><span>本地运行 数据不出机</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="tickerTrack">
+    <span>RUST<i>·</i>TAURI 2<i>·</i>WEBVIEW2<i>·</i>开源<i>·</i>本地优先<i>·</i>无广告<i>·</i>无捆绑<i>·</i></span>
+  </div>
+</div>
+
+<!-- SCREENSHOT -->
+<section class="sec sec-shot" id="shot">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2 class="dark-text">一眼，即见全貌。</h2>
+      <p class="dark-sub">冷灰底色，晴空蓝主调。原生级窗口质感，没有广告，也没有弹窗。</p>
+    </div>
+    <div class="shot-tilt rv" id="shotTilt">
+      <div class="shot-wrap" id="shotWrap">
+        <img src="assets/screenshot-home.png" alt="系统清理助手主界面">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES BENTO -->
+<section class="sec sec-shot" id="features" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2 class="dark-text">六大核心功能。</h2>
+      <p class="dark-sub">看得见的<span class="rotor" id="rotor"><b class="on">确认</b><i>确认</i></span>，放得心的执行。</p>
+    </div>
+    <div class="bento rv" id="bento">
+      <div class="cell w4">
+        <span class="k">垃圾清理</span>
+        <h3>规则引擎驱动，风险分组确认。</h3>
+        <p>覆盖系统临时文件、浏览器缓存、回收站等高频垃圾；高危项单独标注，经你确认后才动手清理。</p>
+      </div>
+      <div class="cell w2">
+        <span class="k">文件粉碎机</span>
+        <h3>多次覆写，不可恢复。</h3>
+        <p>敏感文件整目录递归粉碎，进度实时可视。</p>
+      </div>
+      <div class="cell w2">
+        <span class="k">电脑加速</span>
+        <h3>一键扫描，逐项建议。</h3>
+        <p>每条优化都保留「恢复」入口，加速不等于失控。</p>
+      </div>
+      <div class="cell w4">
+        <span class="k">启动项管理</span>
+        <h3>五个维度，全面接管开机自启。</h3>
+        <p>软件、计划任务、系统服务、右键菜单、资源管理器插件。支持禁用 / 恢复 / 提权删除，附带启动耗时分析。</p>
+      </div>
+      <div class="cell w3 wide-row">
+        <div class="txt">
+          <span class="k">个性化设置</span>
+          <h3>六套配色，一键切换。</h3>
+          <p>即时生效；开机自启与关闭确认随心配置。</p>
+        </div>
+      </div>
+      <div class="cell w3 wide-row">
+        <div class="txt">
+          <span class="k">纯净本地</span>
+          <h3>数据不出机。</h3>
+          <p>无广告、无捆绑、无上传。卸载即带走一切。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE -->
+<section class="sec sec-compare" id="compare">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2>为什么这么小？</h2>
+      <p>换掉「给每个用户发一份浏览器」的旧架构，体积自然不复存在。</p>
+    </div>
+    <table class="compare rv">
+      <tr><th></th><th>传统 Electron 方案</th><th>系统清理助手 · Tauri</th></tr>
+      <tr><td>安装包体积</td><td class="old">66.7 MB</td><td class="new">1.74 MB</td></tr>
+      <tr><td>渲染引擎</td><td class="old">每个用户捆绑一份 Chromium</td><td class="new">复用系统自带 WebView2</td></tr>
+      <tr><td>后端运行时</td><td class="old">捆绑完整 Node.js</td><td class="new">原生编译 Rust 二进制</td></tr>
+      <tr><td>磁盘占用</td><td class="old">开发目录 600 MB+</td><td class="new">单文件分发</td></tr>
+      <tr><td>安全攻击面</td><td class="old">庞大运行时需持续更新</td><td class="new">极小依赖面，随系统更新</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec sec-compare" id="faq" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2>常见问题。</h2>
+    </div>
+    <div class="faq rv">
+      <div class="qa">
+        <h4>为什么杀毒软件可能提示风险？</h4>
+        <p>清理类软件会操作注册表与计划任务，部分杀软会保守提示。本工具行为完全透明，可将程序加入信任区；发布页附有《误报处理指南》。</p>
+      </div>
+      <div class="qa">
+        <h4>需要管理员权限吗？</h4>
+        <p>日常清理无需提权。仅当删除受系统保护的启动项时才会弹出 UAC 确认，拒绝后不影响其他功能。</p>
+      </div>
+      <div class="qa">
+        <h4>支持哪些系统？</h4>
+        <p>Windows 10（1803+）与 Windows 11。使用系统自带 WebView2 运行时，无需额外安装任何依赖。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div>
+      <h5>产品</h5>
+      <a href="#features">功能</a>
+      <a href="#shot">界面概览</a>
+      <a href="https://github.com/GeLith/releases" target="_blank">下载</a>
+    </div>
+    <div>
+      <h5>支持</h5>
+      <a href="#faq">常见问题</a>
+      <a href="https://github.com/GeLith/issues" target="_blank">反馈问题</a>
+      <a href="https://github.com/GeLith/releases" target="_blank">检查更新</a>
+    </div>
+    <div>
+      <h5>关于</h5>
+      <a href="https://github.com/GeLith" target="_blank">GeLith</a>
+      <a href="https://tauri.app" target="_blank">Tauri 2</a>
+    </div>
+  </div>
+  <div class="foot-base">
+    <span>Copyright © 2026 GeLith. 保留所有权利。</span>
+    <span>Rust · Tauri 2 · WebView2</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Split Text: 标题逐字升起 ---- */
+  (function () {
+    var el = document.querySelector('[data-split]');
+    if (!el) return;
+    var text = el.textContent.trim();
+    el.textContent = '';
+    Array.prototype.forEach.call(text, function (ch, i) {
+      var s = document.createElement('span');
+      s.className = 'ch';
+      s.textContent = ch;
+      s.style.transitionDelay = (i * 70) + 'ms';
+      el.appendChild(s);
+    });
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { el.classList.add('split-in'); });
+    });
+  })();
+
+  /* ---- Decrypted Text: 乱码解码 ---- */
+  var GLYPHS = '!<>-_\\/[]{}—=+*^?#________';
+  function decrypt(el) {
+    if (reduced) return;
+    var final = el.getAttribute('data-final') || el.textContent;
+    el.setAttribute('data-final', final);
+    var frame = 0, total = 26;
+    var timer = setInterval(function () {
+      frame++;
+      var done = Math.floor((frame / total) * final.length);
+      var out = '';
+      for (var i = 0; i < final.length; i++) {
+        out += i < done ? final[i]
+             : (final[i] === ' ' ? ' ' : GLYPHS[Math.floor(Math.random() * GLYPHS.length)]);
+      }
+      el.textContent = out;
+      if (frame >= total) { clearInterval(timer); el.textContent = final; }
+    }, 34);
+  }
+
+  /* ---- Count Up ---- */
+  function countUp(el) {
+    var target = parseFloat(el.getAttribute('data-count'));
+    var dec = parseInt(el.getAttribute('data-decimals') || '0', 10);
+    var pre = el.getAttribute('data-prefix') || '';
+    var suf = el.getAttribute('data-suffix') || '';
+    if (reduced) { el.textContent = pre + target.toFixed(dec) + suf; return; }
+    var t0 = null, dur = 1700;
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var p = Math.min((ts - t0) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 4);
+      el.textContent = pre + (target * eased).toFixed(dec) + suf;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* ---- Rotating Text ---- */
+  (function () {
+    var rotor = document.getElementById('rotor');
+    if (!rotor) return;
+    var words = ['确认', '掌控', '安心', '清爽'];
+    var ghost = rotor.querySelector('i');
+    var cur = rotor.querySelector('b');
+    var idx = 0;
+    ghost.textContent = words[0];
+    setInterval(function () {
+      var next = words[(idx + 1) % words.length];
+      var nb = document.createElement('b');
+      nb.textContent = next;
+      nb.className = 'on';
+      var old = cur;
+      old.classList.remove('on'); old.classList.add('off');
+      rotor.insertBefore(nb, old);
+      cur = nb;
+      ghost.textContent = next;
+      setTimeout(function () { if (old.parentNode) old.parentNode.removeChild(old); }, 500);
+      idx = (idx + 1) % words.length;
+    }, 2400);
+  })();
+
+  /* ---- Ticker: 复制一份轨道实现无缝循环 ---- */
+  (function () {
+    var track = document.getElementById('tickerTrack');
+    if (!track) return;
+    track.innerHTML += track.innerHTML;
+  })();
+
+  /* ---- 滚动触发: reveal + count + decrypt ---- */
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var el = e.target;
+      el.classList.add('on');
+      el.querySelectorAll('[data-count]').forEach(countUp);
+      if (el.hasAttribute('data-count')) countUp(el);
+      if (el.hasAttribute('data-decrypt')) decrypt(el);
+      io.unobserve(el);
+    });
+  }, { threshold: .18 });
+  document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+  // stats 区不在 .rv 内, 单独观察
+  var statsIO = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.querySelectorAll('[data-count]').forEach(countUp);
+      statsIO.unobserve(e.target);
+    });
+  }, { threshold: .4 });
+  var statsEl = document.querySelector('.stats');
+  if (statsEl) statsIO.observe(statsEl);
+  decrypt(document.querySelector('[data-decrypt]'));
+
+  /* ---- Spotlight Card: 光斑跟随鼠标 ---- */
+  if (!reduced && window.matchMedia('(pointer:fine)').matches) {
+    document.querySelectorAll('.cell').forEach(function (cell) {
+      cell.addEventListener('mousemove', function (e) {
+        var r = cell.getBoundingClientRect();
+        cell.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        cell.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
+  }
+
+  /* ---- Tilted Card: 3D 倾斜 ---- */
+  (function () {
+    var tilt = document.getElementById('shotTilt');
+    var wrap = document.getElementById('shotWrap');
+    if (!tilt || !wrap || reduced || !window.matchMedia('(pointer:fine)').matches) return;
+    tilt.addEventListener('mousemove', function (e) {
+      var r = tilt.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - .5;
+      var py = (e.clientY - r.top) / r.height - .5;
+      wrap.style.transition = 'transform .08s linear';
+      wrap.style.transform = 'rotateX(' + (-py * 7).toFixed(2) + 'deg) rotateY(' + (px * 9).toFixed(2) + 'deg)';
+    });
+    tilt.addEventListener('mouseleave', function () {
+      wrap.style.transition = 'transform .6s cubic-bezier(.22,1,.36,1)';
+      wrap.style.transform = 'rotateX(0) rotateY(0)';
+    });
+  })();
+
+  /* ---- Magnet: 药丸按钮磁吸 ---- */
+  (function () {
+    var wrapEl = document.querySelector('[data-magnet]');
+    var pill = wrapEl && wrapEl.querySelector('.pill');
+    if (!wrapEl || !pill || reduced || !window.matchMedia('(pointer:fine)').matches) return;
+    var R = 130;
+    document.addEventListener('mousemove', function (e) {
+      var r = pill.getBoundingClientRect();
+      var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      var dx = e.clientX - cx, dy = e.clientY - cy;
+      var d = Math.hypot(dx, dy);
+      if (d < R) {
+        pill.style.transform = 'translate(' + dx * .22 + 'px,' + dy * .22 + 'px)';
+      } else if (pill.style.transform) {
+        pill.style.transform = '';
+      }
+    });
+  })();
+
+  /* ---- Click Spark: 点击火花 ---- */
+  if (!reduced) {
+    document.addEventListener('pointerdown', function (e) {
+      var n = 10;
+      for (var i = 0; i < n; i++) {
+        var s = document.createElement('span');
+        s.className = 'spark';
+        s.style.left = e.clientX + 'px';
+        s.style.top = e.clientY + 'px';
+        s.style.background = i % 2 ? '#4da3ff' : '#ffffff';
+        document.body.appendChild(s);
+        var ang = (Math.PI * 2 * i) / n + Math.random() * .5;
+        var dist = 26 + Math.random() * 26;
+        s.animate([
+          { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 },
+          { transform: 'translate(calc(-50% + ' + Math.cos(ang) * dist + 'px), calc(-50% + ' + Math.sin(ang) * dist + 'px)) scale(.2)', opacity: 0 }
+        ], { duration: 480 + Math.random() * 240, easing: 'cubic-bezier(.22,1,.36,1)' })
+         .addEventListener('finish', function (el) { return function () { el.remove(); }; }(s));
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>
