@@ -1,0 +1,80 @@
+/* ============================================================
+   Q 弹动效（全站共享）— CSS 部分
+   依赖 JS 侧（js/qpop.js）给 <body> 加 .js-anim、给卡片加 .in、
+   滚动时写 --jqsx/--jqsy（果冻惯性）
+   尊重 prefers-reduced-motion：减弱动效用户不启用任何形变
+
+   transform 组合架构（单一出口，避免多个脚本互踩 style.transform）：
+     --tiltx/--tilty/--tilts 鼠标倾斜 （index.html tilt 脚本写入）
+     --jqsx/--jqsy 滚动惯性拉伸       （js/qpop.js 写入）
+   注意：不含纵向位移项——用户要求悬停/离开时卡片位置高度保持不变。
+   未写入时全部取中性默认值。
+   ============================================================ */
+
+.card {
+    transform:
+        perspective(800px)
+        rotateX(var(--tiltx, 0deg))
+        rotateY(var(--tilty, 0deg))
+        scale(calc(var(--tilts, 1) * var(--press, 1)))
+        scale(var(--jqsx, 1), var(--jqsy, 1));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+    /* 卡片入场：滚动进入视口时 Q 弹弹出（过冲弹簧曲线）
+       预隐藏用 :not(.in) 作用域 —— .in 一旦加上，此规则整体失活，
+       transform 交还组合规则（否则预状态会永久压住 tilt/果冻/悬停）
+       赞助弹卡(donate-card-inner)显隐由页面逻辑接管，此处豁免 */
+    .js-anim .card:not(.in):not(.donate-card-inner) {
+        opacity: 0;
+        transform: translateY(46px) scale(0.90);
+    }
+    .js-anim .card.in {
+        opacity: 1;
+        animation: cardPop 0.9s cubic-bezier(0.34, 1.85, 0.64, 1);
+    }
+
+    /* 悬停弹性上浮 / 按压微缩：写变量，由组合规则统一生效
+       （带 .card-container > 前缀压过 main.css 同名过渡规则，否则首页无过渡、悬停瞬跳）
+       transform 用 0.28s 短弹簧：倾斜/上浮快速跟手（0.55s 长弹簧会被逐帧变化的
+       倾斜变量不断重置目标，导致"不跟手"）；入场大弹跳走 animation 通道不受影响 */
+    .card-container > .card,
+    .card {
+        transition:
+            opacity 0.26s ease-out,
+            visibility 0.5s ease,
+            box-shadow 0.4s ease,
+            transform 0.28s cubic-bezier(0.34, 1.3, 0.64, 1);
+    }
+    /* 悬停不再纵向位移（用户要求高度不变）；按下仅轻微缩放 */
+    .card:active { --press: 0.965; transition-duration: 0.18s; }
+
+    /* 滚动惯性写入期间：transform 不参与过渡（逐帧改变量会让过渡反复重启），
+       回弹结算移除 .jq-on 后恢复弹簧过渡，实现 Q 弹回位 */
+    .card.jq-on {
+        transition-property: opacity, visibility, box-shadow;
+        transition-duration: 0.26s, 0.5s, 0.4s;
+    }
+}
+
+/* 覆盖 main.css 悬停黑色内描边：悬停时保持静态阴影不变（始终生效） */
+.card:hover {
+    box-shadow:
+        inset 1.5px 0 1px rgba(255, 60, 60, 0.14),
+        inset -1.5px 0 1px rgba(60, 120, 255, 0.14),
+        inset 0 0 2px 1px rgba(0, 0, 0, 0.15),
+        inset 0 0 10px 4px rgba(0, 0, 0, 0.10),
+        0 4px 16px rgba(17, 17, 26, 0.05),
+        0 8px 24px rgba(17, 17, 26, 0.05),
+        0 16px 56px rgba(17, 17, 26, 0.05),
+        inset 0 4px 16px rgba(17, 17, 26, 0.05),
+        inset 0 8px 24px rgba(17, 17, 26, 0.05),
+        inset 0 16px 56px rgba(17, 17, 26, 0.05);
+}
+
+/* 不用 forwards：结束后由组合规则接管，悬停/倾斜/惯性才能正常叠加 */
+@keyframes cardPop {
+    from { opacity: 0; transform: translateY(46px) scale(0.90); }
+    to   { opacity: 1; }
+}
