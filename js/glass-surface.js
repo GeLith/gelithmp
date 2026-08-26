@@ -125,7 +125,7 @@
       '</filter></defs></svg>';
     var wrapper = document.createElement('div');
     wrapper.innerHTML = markup;
-    return { svg: wrapper.querySelector('svg'), filterId: fid };
+    return { svg: wrapper.querySelector('svg'), filterId: fid, map: map };
   }
 
   /* ---------- 单卡初始化 ---------- */
@@ -155,6 +155,9 @@
     card.style.setProperty('--filter-id', 'url(#' + built.filterId + ')');
     card.classList.add('glass-surface--svg');
     card.classList.remove('glass-surface--fallback');
+    /* 预热：提前解码 feImage 的 base64 贴图 → 首次打开弹卡玻璃立即生效（无延迟） */
+    var warm = new Image();
+    warm.src = built.map;
   }
 
   /* ---------- 批量初始化 ---------- */
