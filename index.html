@@ -39,46 +39,55 @@
         }
     }
 
-    /* —— 赞助卡 ⇄ 大卡片 对称交换动画 ——
-       打开：大卡缩小淡出退场 ⇄ 赞助卡放大淡入接管其位置（同时反向，无叠影窗口）
-       关闭：反向交换。零坐标 JS：纯类名切换，动画只走 opacity/scale/visibility
-       （不改变文档布局 → 滚动条/页面高度恒定，无抖动）
-       赞助卡静止位 = 容器顶部（原设计位置，即大卡片所在区域），玻璃滤镜按其
-       恒定尺寸 500×545 精确生成，扭曲始终匹配 */
-    .card-container > .card.donate-card-inner {
+    /* —— 赞助卡 ⇄ 大卡片 对称交换动画（两层 transform FLIP，纯 GPU 合成，无重排）——
+       外层 .donate-morph：唯一承担「进出场形态」—— translate(-50%,-50%) + scale(0.92→1)
+       合成动画（不触发重排，玻璃滤镜按内层恒定尺寸一次生成 → 不再逐帧重算而卡顿）。
+       内层 .donate-card-inner：恒定尺寸、常显，只挂鼠标倾斜链（短过渡跟手）。
+       打开：外层从 scale(0.92)/opacity0 弹簧放大到 scale(1)/opacity1，与大卡 .card-hide 的
+       scale(0.92) 收缩对称同步 → 视觉上赞助卡从大卡位置「弹」出接管；关闭反向。
+       不再动画 width/height/left/top —— 那正是此前卡顿与玻璃失效的根因 */
+    .donate-morph {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        width: 500px;
+        max-width: 90vw;
         z-index: 60;
+        transform-origin: 50% 50%;
+        /* 静止（关闭）态：缩到主卡大小并淡出，与主卡 .card-hide 对称 */
+        transform: translate(-50%, -50%) scale(0.92);
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        --pop-s: 0.85;
-        /* 注意：此元素绝不可加 will-change:transform —— 会使元素成为 backdrop root，
-           ::before 的 backdrop-filter 采样变空 → 玻璃整体失效（主卡无 will-change 故正常） */
-        transform:
-            perspective(800px)
-            scale(var(--pop-s))
-            rotateX(var(--tiltx, 0deg))
-            rotateY(var(--tilty, 0deg))
-            scale(var(--tilts, 1));
         transition:
-            opacity 0.3s ease-in,
-            visibility 0s linear 0.3s,
-            transform 0.42s cubic-bezier(0.32, 0.72, 0.24, 1);
+            opacity 0.2s ease-in,
+            visibility 0s linear 0.2s,
+            transform 0.55s cubic-bezier(0.34, 1.5, 0.5, 1);
     }
-    .card-container > .card.donate-card-inner.card-show {
+    .donate-morph.show {
+        transform: translate(-50%, -50%) scale(1);
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
-        --pop-s: 1;
+        transition:
+            opacity 0.22s ease-out 0.03s,
+            visibility 0s linear 0s,
+            transform 0.55s cubic-bezier(0.34, 1.5, 0.5, 1) 0.03s;
+    }
+    /* 内层：恒定尺寸，仅倾斜；显隐与可点击性由外层 #donateMorph 继承控制
+       （此元素绝不可加 will-change:transform，否则沦为 backdrop root →
+       ::before 玻璃采空失效；主卡无 will-change 故正常） */
+    .card-container .card.donate-card-inner {
+        width: 100%;
+        /* 不在此强制 visibility/pointer-events：须由外层 #donateMorph 继承控制。
+           若此处写死 visible/auto，则关闭态（外层 opacity:0）下内层仍可被命中，
+           会在屏幕中央留下一块透明且吞掉点击的 500px 死区 → 按钮点不了 */
         transform:
             perspective(800px)
-            scale(1)
             rotateX(var(--tiltx, 0deg))
             rotateY(var(--tilty, 0deg))
             scale(var(--tilts, 1));
-        transition:
-            opacity 0.35s ease-out 0.05s,
-            visibility 0s linear 0s,
-            transform 0.5s cubic-bezier(0.34, 1.3, 0.64, 1) 0.05s;
+        transition: transform 0.18s ease-out;
     }
     /* 主卡：打开时缩小淡出退场；关闭时弹性长回（与赞助卡反向同步）
        （选择器带 .card-container > 前缀：特异性压过 qpop 的 .in 规则，否则主卡无法淡出） */
@@ -108,10 +117,13 @@
             rotateY(var(--tilty, 0deg))
             scale(var(--tilts, 1));
         transition:
-            opacity 0.28s ease-in,
-            visibility 0s linear 0.28s,
-            transform 0.32s cubic-bezier(0.32, 0.72, 0.24, 1);
+            opacity 0.3s ease-in,
+            visibility 0s linear 0.3s,
+            transform 0.55s cubic-bezier(0.34, 1.5, 0.5, 1);
     }
+
+    /* 旧版 FLIP 尺寸变形支撑类（card-fixed/card-pin/card-swap-noanim）已移除：
+       两层 transform FLIP 不再需要坐标钉位与过渡禁用 */
 </style>
     <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
         <filter id="liquid-glass" x="-30%" y="-30%" width="160%" height="160%">
@@ -220,6 +232,7 @@
             </div>
         </div>
 
+        <div class="donate-morph" id="donateMorph">
         <div class="card donate-card-inner" id="donateCard">
             <button class="donate-close" onclick="closeDonate()">&times;</button>
             <h1>赞助支持</h1>
@@ -234,6 +247,7 @@
                     <img src="img/wechat-pay.jpg" alt="支付宝收款码">
                 </div>
             </div>
+        </div>
         </div>
     </main>
 
@@ -354,14 +368,23 @@
         })();
     </script>
     <script>
-        /* 赞助卡 ⇄ 大卡片：对称交换（两卡同时反向动画，纯类名切换零坐标） */
+        /* 赞助卡 ⇄ 大卡片：两层 transform FLIP（详见 index.html 内联 CSS 顶部注释）
+           纯类名切换，无 JS 坐标运算、无 width/height 动画 → 稳定流畅无卡顿。
+           打开：#donateMorph 加 .show（scale(0.92)→1 + 淡入），同时 #mainCard 加 .card-hide（对称收缩淡出）
+           关闭：反向移除两个类。倾斜仍由上方 tilt 脚本写 #donateCard 的 CSS 变量 */
         function openDonate() {
-            document.getElementById('mainCard').classList.add('card-hide');
-            document.getElementById('donateCard').classList.add('card-show');
+            var morph = document.getElementById('donateMorph');
+            var main = document.getElementById('mainCard');
+            if (morph.classList.contains('show')) return;
+            morph.classList.add('show');
+            main.classList.add('card-hide');
         }
         function closeDonate() {
-            document.getElementById('donateCard').classList.remove('card-show');
-            document.getElementById('mainCard').classList.remove('card-hide');
+            var morph = document.getElementById('donateMorph');
+            var main = document.getElementById('mainCard');
+            if (!morph.classList.contains('show')) return;
+            morph.classList.remove('show');
+            main.classList.remove('card-hide');
         }
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeDonate();

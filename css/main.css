@@ -916,26 +916,23 @@ body.night-mode {
     pointer-events: none;
 }
 
-.donate-card-inner {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    width: 500px;
-    max-width: 90vw;
-    padding: 3em 2.5em;
-    text-align: center;
-    z-index: 2;
-}
+    .donate-card-inner {
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+        padding: 3em 2.5em;
+        text-align: center;
+        z-index: 2;
+    }
 
-.donate-card-inner.card-show {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
+/* 赞助卡悬停禁用 will-change:transform —— 否则该卡沦为 backdrop root，
+   其 ::before 玻璃采不到背景而失效（与 index.html 内联注释一致） */
+.donate-card-inner:hover {
+    will-change: auto;
 }
 
 .donate-close {
@@ -999,6 +996,10 @@ body.night-mode {
 }
 
 @media only screen and (max-width: 762px) {
+    .donate-morph {
+        width: 90vw;
+        max-width: 90vw;
+    }
     .donate-card-inner {
         padding: 2em 1.2em;
         width: 100%;
