@@ -155,9 +155,11 @@
     card.style.setProperty('--filter-id', 'url(#' + built.filterId + ')');
     card.classList.add('glass-surface--svg');
     card.classList.remove('glass-surface--fallback');
-    /* 预热：提前解码 feImage 的 base64 贴图 → 首次打开弹卡玻璃立即生效（无延迟） */
+    /* 预热：显式解码 feImage 的 base64 贴图 → 首次打开弹卡玻璃立即生效（无延迟）。
+       decode() 等待位图真正进解码缓存，比仅赋 src 更确定 */
     var warm = new Image();
     warm.src = built.map;
+    if (warm.decode) warm.decode().catch(function () {});
   }
 
   /* ---------- 批量初始化 ---------- */
