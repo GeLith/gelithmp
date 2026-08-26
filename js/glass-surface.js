@@ -14,10 +14,11 @@
   'use strict';
 
   /* 版本标记：DevTools 控制台应看到此日志；看不到 = 浏览器在用缓存的旧脚本 */
-  console.log('[glass] v23 · 逐元素内嵌滤镜（每卡专属 base64 贴图，按自身精确尺寸生成，边缘折射与初始版本一致）');
+  console.log('[glass] v24 · 逐元素内嵌滤镜（主卡独立液态档 -520，赞赏卡保持 -320 参照）');
 
   /* ---------- 可调参数 ---------- */
-  var DISTORTION_SCALE_BIG = -320;   // 扭曲减弱（上限 |scale|/2 = 160px）：整体更克制
+  var DISTORTION_SCALE_BIG = -320;   // 大档通用：上限 |scale|/2 = 160px
+  var DISTORTION_SCALE_MAIN = -520;  // 主卡专属：等比放大到接近赞赏卡的相对液态强度（上限 260px）
   var DISTORTION_SCALE_SMALL = -50;  // 小卡片轻微折射（上限 25px）
   var RIM_BAND_PX = 21;              // 折射带宽度基准（小元素按短边 18% 自适应收窄，≥6px）
   var GLASS_BLUR_BIG = 2;            // 大卡片磨砂：低磨砂保持折射线条锐利
@@ -142,7 +143,10 @@
                 card.classList.contains('hero-card') ||
                 card.classList.contains('btn') ||
                 Math.max(w, h) >= BIG_SIZE_PX;
-    var scale = isBig ? DISTORTION_SCALE_BIG : DISTORTION_SCALE_SMALL;
+    /* 主卡用更强的专属档，使其边缘位移按更大尺寸等比放大到接近赞赏卡的观感强度；
+       hero-card / btn / 尺寸达标的其他大档仍走通用 big 档，不受影响 */
+    var scale = card.classList.contains('main-card') ? DISTORTION_SCALE_MAIN :
+                (isBig ? DISTORTION_SCALE_BIG : DISTORTION_SCALE_SMALL);
     var glassBlur = isBig ? GLASS_BLUR_BIG : GLASS_BLUR_SMALL;
     var br = parseFloat(getComputedStyle(card).borderTopLeftRadius) || 0;
     /* 折射带自适应：小元素按短边 18% 收窄且不低于 6px，避免糊满整个按钮 */
