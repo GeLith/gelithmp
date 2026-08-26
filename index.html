@@ -437,11 +437,13 @@
                     rg.left + rg.width / 2, rg.top + rg.height / 2,
                     main.offsetWidth, main.offsetHeight);
                 freeze(false);                           /* 先解冻再设目标 → 弹簧生效（否则瞬移） */
-                setVars(v.mx, v.my, v.sx, v.sy);         /* 弹簧飞回主卡宽高，全程可见 */
-                main.classList.remove('card-hide');      /* 主卡同步回场，交叉接管 */
-                setTimeout(function () {                 /* 落定后再快速淡出 + 复位 */
+                setVars(v.mx, v.my, v.sx, v.sy);         /* 弹簧飞回主卡宽高 */
+                /* 与打开严格对称：飞行同步快速淡出 → 非等比过渡的内容拉伸被
+                   低透明度掩藏（打开亦然），不再全程不透明地暴露涂抹变形 */
+                morph.classList.remove('show');          /* 0.16s 快速淡出 */
+                main.classList.remove('card-hide');      /* 主卡同步交叉淡入，无突兀跳变 */
+                setTimeout(function () {                 /* 飞行结束后复位变量（供下次打开测量自然矩形） */
                     freeze(true);
-                    morph.classList.remove('show');
                     setVars(0, 0, 1, 1); flush();
                     freeze(false);
                     settled = false;
