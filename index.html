@@ -19,12 +19,15 @@
     <link href="css/main.css" rel="stylesheet">
 <link href="css/qpop.css" rel="stylesheet">
 <style>
-    /* —— 左右栏位置互换：工具箱在左，欢迎区在右（flex order，DOM 不动） ——*/
-    .main-row > :nth-child(1) { order: 3; }  /* col-intro  → 右 */
-    .main-row > :nth-child(2) { order: 2; }  /* divider    → 中 */
-    .main-row > :nth-child(3) { order: 1; }  /* col-tools  → 左 */
-    .main-row > :nth-child(4) { order: 4; }
-    .main-row > :nth-child(5) { order: 5; }
+    /* —— 左右栏位置互换：工具箱在左，欢迎区居中（flex order，DOM 不动）——
+       仅桌面端生效：手机单列堆叠时保持自然阅读顺序（欢迎语最前） */
+    @media only screen and (min-width: 763px) {
+        .main-row > :nth-child(1) { order: 3; }  /* col-intro  → 中 */
+        .main-row > :nth-child(2) { order: 2; }  /* divider    → 左二 */
+        .main-row > :nth-child(3) { order: 1; }  /* col-tools  → 左 */
+        .main-row > :nth-child(4) { order: 4; }
+        .main-row > :nth-child(5) { order: 5; }
+    }
 
     /* —— 三列等宽 + 压缩两侧留白 ——
        （外层呼吸感由 .main-card 自身 padding 提供）。仅桌面端生效 */
