@@ -212,7 +212,9 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: center;     /* 标题整体偏中间（含图标块后自然略偏上） */
+    padding-top: 0;
+    padding-bottom: 1.6em;       /* 轻微上偏 */
     padding-right: 2.5em;
     min-width: 0;
 }
@@ -328,23 +330,26 @@ main {
 }
 
 .icons {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin: 0.8em auto 0;
+    max-width: 22em;
+    margin: 1.2em auto 0;
     padding: 0;
-    gap: 1em;
-    flex-wrap: wrap;
+    gap: 0.9em;
 }
 
 .icon-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 3.5em;
-    height: 3.5em;
-    border-radius: 50%;
+    gap: 0.55em;
+    width: 100%;
+    height: 3.2em;
+    padding: 0 1.1em;
+    border-radius: 999px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.16) 100%);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.1);
@@ -369,7 +374,7 @@ main {
 }
 
 .icon-link:hover {
-    transform: scale(1.2) rotate(15deg);
+    transform: scale(1.04);
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.2) 100%);
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 20px rgba(200, 230, 255, 0.15);
@@ -379,13 +384,24 @@ main {
     opacity: 1;
 }
 
+/* 胶囊按钮文字标签：取自 title 属性 */
+.icon-link::after {
+    content: attr(title);
+    font-size: 0.95em;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
 .donate-icon svg {
     filter: none !important;
 }
 
 .icon-link svg {
-    width: 1.8em;
-    height: 1.8em;
+    width: 1.5em;
+    height: 1.5em;
     transition: all 0.4s ease;
     filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
 }
@@ -872,8 +888,8 @@ body.night-mode {
     }
 
     .icon-link {
-        width: 2.5em;
-        height: 2.5em;
+        width: 100%;
+        height: 3em;
     }
 
     .icon-link svg {
