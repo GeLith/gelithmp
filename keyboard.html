@@ -480,6 +480,24 @@
             to { opacity: 1; transform: none; }
         }
 
+        /* —— 液态玻璃宿主入场覆写（覆盖共享 qpop 的 cardPop）——
+           规范：opacity<1 的元素是 backdrop root，其 ::before 的液态扭曲在根存续期间必然失明。
+           cardPop 让卡片自身 opacity 爬升整整 0.9s → 扭曲迟到「消失后再出现」。
+           此处改为前 8%（约 48ms）即达不透明，root 存续压缩到不可感知；上滑位移照常走完。
+           包在 no-preference 内与 qpop 同门控，尊重减弱动效偏好 */
+        @media (prefers-reduced-motion: no-preference) {
+            .js-anim .card.in {
+                animation-name: glassCardIn;
+                animation-duration: 0.6s;
+                animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            @keyframes glassCardIn {
+                0%   { opacity: 0; transform: translateY(46px) scale(0.96); }
+                8%   { opacity: 1; }
+                100% { transform: translateY(0) scale(1); }
+            }
+        }
+
         @media (max-width: 768px) {
             .hero-title { font-size: 2em; }
             .features-grid { grid-template-columns: 1fr; }
