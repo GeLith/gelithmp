@@ -39,13 +39,13 @@
         }
     }
 
-    /* —— 赞助卡 ⇄ 大卡片 对称交换动画（两层 transform FLIP，纯 GPU 合成，无重排）——
-       外层 .donate-morph：唯一承担「进出场形态」—— translate(-50%,-50%) + scale(0.92→1)
-       合成动画（不触发重排，玻璃滤镜按内层恒定尺寸一次生成 → 不再逐帧重算而卡顿）。
-       内层 .donate-card-inner：恒定尺寸、常显，只挂鼠标倾斜链（短过渡跟手）。
-       打开：外层从 scale(0.92)/opacity0 弹簧放大到 scale(1)/opacity1，与大卡 .card-hide 的
-       scale(0.92) 收缩对称同步 → 视觉上赞助卡从大卡位置「弹」出接管；关闭反向。
-       不再动画 width/height/left/top —— 那正是此前卡顿与玻璃失效的根因 */
+    /* —— 赞助卡 ⇄ 大卡片 真实宽高 FLIP（实测矩形 + 非等比弹簧，纯合成器动画）——
+       打开：JS 实测主卡矩形，把外层 #donateMorph 以 --mx/--my/--sx/--sy 瞬间「钉」在
+       主卡的位置与【宽、高】上，下一帧解除冻结 → scaleX/scaleY 各自独立地
+       Q 弹簧回自然尺寸（视觉 = 真实长宽各自收缩/展开的「由大到小」，而非等比缩放）。
+       关闭：完全反向 —— 先测主卡目标矩形，弹簧飞回其宽高，落定后淡出交还主卡。
+       变形全程只走 transform/opacity 合成通道：零重排；内层恒定尺寸 → 玻璃 SVG
+       滤镜贴图按恒定尺寸一次生成，不逐帧重建，流畅且扭曲始终锐利。 */
     .donate-morph {
         position: fixed;
         left: 50%;
@@ -54,25 +54,30 @@
         max-width: 90vw;
         z-index: 60;
         transform-origin: 50% 50%;
-        /* 静止（关闭）态：缩到主卡大小并淡出，与主卡 .card-hide 对称 */
-        transform: translate(-50%, -50%) scale(0.92);
-        opacity: 0;
-        visibility: hidden;
+        /* 关闭态【禁用 visibility:hidden】：保持子树可渲染，令 ::before 的
+           backdrop-filter SVG 滤镜链自加载起即被合成器光栅化预热——
+           否则首次显示才临时提升图层+解码 feImage 贴图 → 扭曲慢半拍出现。
+           「不可见」用近零透明度表达（视觉不可察），点击由 pointer-events 拦截 */
+        opacity: 0.001;
         pointer-events: none;
+        transform:
+            translate(-50%, -50%)
+            translate3d(var(--mx, 0px), var(--my, 0px), 0)
+            scale(var(--sx, 1), var(--sy, 1));
         transition:
-            opacity 0.2s ease-in,
-            visibility 0s linear 0.2s,
-            transform 0.55s cubic-bezier(0.34, 1.5, 0.5, 1);
+            opacity 0.16s ease-out,
+            transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1); /* 过冲弹簧 = Q 弹 */
     }
     .donate-morph.show {
-        transform: translate(-50%, -50%) scale(1);
         opacity: 1;
-        visibility: visible;
         pointer-events: auto;
-        transition:
-            opacity 0.22s ease-out 0.03s,
-            visibility 0s linear 0s,
-            transform 0.55s cubic-bezier(0.34, 1.5, 0.5, 1) 0.03s;
+    }
+    /* FLIP 钉位 / 复位瞬间的过渡冻结 */
+    .donate-morph.noanim {
+        transition: none !important;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .donate-morph { transition-duration: 0s; }
     }
     /* 内层：恒定尺寸，仅倾斜；显隐与可点击性由外层 #donateMorph 继承控制
        （此元素绝不可加 will-change:transform，否则沦为 backdrop root →
@@ -117,9 +122,9 @@
             rotateY(var(--tilty, 0deg))
             scale(var(--tilts, 1));
         transition:
-            opacity 0.3s ease-in,
-            visibility 0s linear 0.3s,
-            transform 0.55s cubic-bezier(0.34, 1.5, 0.5, 1);
+            opacity 0.24s ease-out,
+            visibility 0s linear 0.24s,
+            transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
     }
 
     /* 旧版 FLIP 尺寸变形支撑类（card-fixed/card-pin/card-swap-noanim）已移除：
@@ -368,27 +373,95 @@
         })();
     </script>
     <script>
-        /* 赞助卡 ⇄ 大卡片：两层 transform FLIP（详见 index.html 内联 CSS 顶部注释）
-           纯类名切换，无 JS 坐标运算、无 width/height 动画 → 稳定流畅无卡顿。
-           打开：#donateMorph 加 .show（scale(0.92)→1 + 淡入），同时 #mainCard 加 .card-hide（对称收缩淡出）
-           关闭：反向移除两个类。倾斜仍由上方 tilt 脚本写 #donateCard 的 CSS 变量 */
-        function openDonate() {
+        /* 赞助卡 ⇄ 大卡片：实测矩形非等比 FLIP（详见内联 CSS 顶部注释）
+           打开：先无动画把 #donateMorph 钉到主卡矩形(--mx/--my/--sx/--sy) → 双 rAF
+                 武装过渡后加 .show 快速淡入并归零变量 → scaleX/scaleY 独立 Q 弹至
+                 自然宽高；主卡同刻 .card-hide 退场（被精确覆盖，无叠影窗口）。
+           关闭：反向 —— 目标矩形中心取自主卡 gBCR、尺寸取布局值（剥离 scale(.92)
+                 污染），弹簧飞回其宽高，落定后才移除 .show 快速淡出并复位。
+           全程仅 transform/opacity 合成通道；settled 标志防连点竞态；
+           resize 展开中吸附回居中。 */
+        (function () {
             var morph = document.getElementById('donateMorph');
             var main = document.getElementById('mainCard');
-            if (morph.classList.contains('show')) return;
-            morph.classList.add('show');
-            main.classList.add('card-hide');
-        }
-        function closeDonate() {
-            var morph = document.getElementById('donateMorph');
-            var main = document.getElementById('mainCard');
-            if (!morph.classList.contains('show')) return;
-            morph.classList.remove('show');
-            main.classList.remove('card-hide');
-        }
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeDonate();
-        });
+            if (!morph || !main) return;
+
+            var SPRING_MS = 550, settled = false;
+
+            function flush() { void morph.offsetWidth; }
+            function setVars(mx, my, sx, sy) {
+                morph.style.setProperty('--mx', mx + 'px');
+                morph.style.setProperty('--my', my + 'px');
+                morph.style.setProperty('--sx', sx);
+                morph.style.setProperty('--sy', sy);
+            }
+            function freeze(on) { morph.classList.toggle('noanim', on); }
+            /* 自然态几何测量：变量归零 + 冻结过渡后读 gBCR（同帧内完成，无闪烁） */
+            function naturalRect() {
+                freeze(true); setVars(0, 0, 1, 1); flush();
+                return morph.getBoundingClientRect();
+            }
+            function varsTo(rn, cx, cy, w, h) {
+                return {
+                    mx: cx - (rn.left + rn.width / 2),
+                    my: cy - (rn.top + rn.height / 2),
+                    sx: w / rn.width,
+                    sy: h / rn.height
+                };
+            }
+
+            window.openDonate = function () {
+                if (morph.classList.contains('show') || settled) return;
+                settled = true;                          /* 动画期锁定反向入口 */
+                var rn = naturalRect();
+                var r1 = main.getBoundingClientRect();   /* 主卡此刻无变形污染 */
+                var v = varsTo(rn,
+                    r1.left + r1.width / 2, r1.top + r1.height / 2,
+                    r1.width, r1.height);
+                setVars(v.mx, v.my, v.sx, v.sy); flush();
+                /* 同步武装：过渡由「冻结 flush 后的计算样式差」触发，不依赖 rAF
+                   （后台标签/掉帧环境下依然必定起弹） */
+                freeze(false);
+                morph.classList.add('show');             /* 0.16s 快速淡入，首帧即有玻璃 */
+                setVars(0, 0, 1, 1);                     /* 非等比宽高 Q 弹至自然尺寸 */
+                main.classList.add('card-hide');
+                setTimeout(function () { settled = false; }, SPRING_MS);
+            };
+
+            window.closeDonate = function () {
+                if (!morph.classList.contains('show') || settled) return;
+                settled = true;
+                var rn = naturalRect();                  /* 复位变量到自然态（冻结中，同步块无闪烁） */
+                var rg = main.getBoundingClientRect();
+                var v = varsTo(rn,
+                    rg.left + rg.width / 2, rg.top + rg.height / 2,
+                    main.offsetWidth, main.offsetHeight);
+                freeze(false);                           /* 先解冻再设目标 → 弹簧生效（否则瞬移） */
+                setVars(v.mx, v.my, v.sx, v.sy);         /* 弹簧飞回主卡宽高，全程可见 */
+                main.classList.remove('card-hide');      /* 主卡同步回场，交叉接管 */
+                setTimeout(function () {                 /* 落定后再快速淡出 + 复位 */
+                    freeze(true);
+                    morph.classList.remove('show');
+                    setVars(0, 0, 1, 1); flush();
+                    freeze(false);
+                    settled = false;
+                }, SPRING_MS + 20);
+            };
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeDonate();
+            });
+
+            var rzT;
+            window.addEventListener('resize', function () {
+                clearTimeout(rzT);
+                rzT = setTimeout(function () {
+                    if (morph.classList.contains('show')) {
+                        freeze(true); setVars(0, 0, 1, 1); flush(); freeze(false);
+                    }
+                }, 120);
+            });
+        })();
     </script>
     <script src="js/qpop.js"></script>
 <script src="js/glass-surface.js"></script>
