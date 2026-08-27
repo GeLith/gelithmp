@@ -26,7 +26,7 @@
        预隐藏用 :not(.in) 作用域 —— .in 一旦加上，此规则整体失活，
        transform 交还组合规则（否则预状态会永久压住 tilt/果冻/悬停）
        赞助弹卡(donate-card-inner)显隐由页面逻辑接管，此处豁免 */
-    .js-anim .card:not(.in):not(.donate-card-inner) {
+    .js-anim .card:not(.in):not(.donate-card-inner):not(.jump-card-inner) {
         opacity: 0;
         transform: translateY(46px) scale(0.90);
     }

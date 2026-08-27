@@ -79,8 +79,36 @@
     .donate-morph.noanim {
         transition: none !important;
     }
+    /* —— 跳转确认卡：机制完全复用赞助卡（对齐 .donate-morph），仅内容不同
+           （倒计时 + 网址 + 双胶囊按钮）—— */
+    .jump-morph {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        width: 500px;
+        max-width: 90vw;
+        z-index: 60;
+        transform-origin: 50% 50%;
+        opacity: 0.001;
+        pointer-events: none;
+        transform:
+            translate(-50%, -50%)
+            translate3d(var(--mx, 0px), var(--my, 0px), 0)
+            scale(var(--sx, 1), var(--sy, 1));
+        transition:
+            opacity 0.16s ease-out,
+            transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .jump-morph.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .jump-morph.noanim {
+        transition: none !important;
+    }
     @media (prefers-reduced-motion: reduce) {
-        .donate-morph { transition-duration: 0s; }
+        .donate-morph,
+        .jump-morph { transition-duration: 0s; }
     }
     /* 内层：恒定尺寸，仅倾斜；显隐与可点击性由外层 #donateMorph 继承控制
        （此元素绝不可加 will-change:transform，否则沦为 backdrop root →
@@ -90,6 +118,18 @@
         /* 不在此强制 visibility/pointer-events：须由外层 #donateMorph 继承控制。
            若此处写死 visible/auto，则关闭态（外层 opacity:0）下内层仍可被命中，
            会在屏幕中央留下一块透明且吞掉点击的 500px 死区 → 按钮点不了 */
+        transform:
+            perspective(800px)
+            rotateX(var(--tiltx, 0deg))
+            rotateY(var(--tilty, 0deg))
+            scale(var(--tilts, 1));
+        transition: transform 0.18s ease-out;
+    }
+    /* 跳转卡内层：与赞助卡内层一致（恒定尺寸，仅倾斜；显隐由外层 #jumpMorph 继承控制）。
+       注意：#jumpMorph 是大卡片容器的兄弟节点（与 #donateMorph 同），
+       故选择器必须以 .jump-morph 为祖先，否则不命中 */
+    .jump-morph .card.jump-card-inner {
+        width: 100%;
         transform:
             perspective(800px)
             rotateX(var(--tiltx, 0deg))
@@ -252,6 +292,20 @@
             </div>
         </div>
         </div>
+
+        <div class="jump-morph" id="jumpMorph">
+        <div class="card jump-card-inner" id="jumpCard">
+            <button class="donate-close" onclick="closeJump()">&times;</button>
+            <p class="jump-tip">你即将跳转到</p>
+            <div class="jump-url" id="jumpUrl"></div>
+            <div class="jump-countdown">倒计时 <span id="jumpSeconds">3</span> 秒后自动跳转</div>
+            <div class="jump-btns">
+                <button class="pill-btn pill-primary" id="jumpNow" onclick="jumpNow()">立即跳转</button>
+                <button class="pill-btn pill-secondary" id="jumpCancel" onclick="closeJump()">取消跳转</button>
+            </div>
+        </div>
+        </div>
+
     </main>
 
     <div class="mouse-follower" id="mouseFollower"></div>
@@ -294,7 +348,8 @@
 
                 card.addEventListener('mousemove', function(e) {
                     /* 赞助弹卡不走 Q 弹入场（无 .in/_popDone），显示期间即可响应倾斜 */
-                    var isPopup = card.classList.contains('donate-card-inner');
+                    var isPopup = card.classList.contains('donate-card-inner') ||
+                                  card.classList.contains('jump-card-inner');
                     if (!isPopup && (!card.classList.contains('in') || !card._popDone)) return;
                     pendingEvt = e;
                     if (pendingEvt._queued) return;
@@ -460,6 +515,134 @@
                         freeze(true); setVars(0, 0, 1, 1); flush(); freeze(false);
                     }
                 }, 120);
+            });
+        })();
+    </script>
+    <script>
+        /* 跳转确认卡：点击大卡片内任意超链接 → 弹出「你即将跳转到 <网址>」
+           3 秒倒计时，双胶囊按钮（立即跳转 / 取消跳转），倒计时结束自动跳转。
+           动画机制完全复用赞助卡的 FLIP 弹簧（.jump-morph 与 .donate-morph 一致）。 */
+        (function () {
+            var morph = document.getElementById('jumpMorph');
+            var main = document.getElementById('mainCard');
+            var urlEl = document.getElementById('jumpUrl');
+            var secEl = document.getElementById('jumpSeconds');
+            if (!morph || !main) return;
+
+            var SPRING_MS = 550, settled = false, COUNTDOWN = 3;
+            var countdownTimer = null, jumpUrl = '', jumpTarget = '_blank';
+
+            function flush() { void morph.offsetWidth; }
+            function setVars(mx, my, sx, sy) {
+                morph.style.setProperty('--mx', mx + 'px');
+                morph.style.setProperty('--my', my + 'px');
+                morph.style.setProperty('--sx', sx);
+                morph.style.setProperty('--sy', sy);
+            }
+            function freeze(on) { morph.classList.toggle('noanim', on); }
+            function naturalRect() {
+                freeze(true); setVars(0, 0, 1, 1); flush();
+                return morph.getBoundingClientRect();
+            }
+            function varsTo(rn, cx, cy, w, h) {
+                return {
+                    mx: cx - (rn.left + rn.width / 2),
+                    my: cy - (rn.top + rn.height / 2),
+                    sx: w / rn.width,
+                    sy: h / rn.height
+                };
+            }
+            function clearCountdown() {
+                if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+            }
+            function startCountdown() {
+                clearCountdown();
+                var sec = COUNTDOWN;
+                if (secEl) secEl.textContent = sec;
+                countdownTimer = setInterval(function () {
+                    sec -= 1;
+                    if (sec <= 0) {
+                        clearCountdown();
+                        doJump();                 /* 倒计时归零 → 自动跳转 */
+                    } else if (secEl) {
+                        secEl.textContent = sec;
+                    }
+                }, 1000);
+            }
+            function doJump() {
+                var u = jumpUrl, t = jumpTarget || '_blank';
+                /* 自动跳转发生在倒计时（非用户手势）之后，window.open 多被拦截，
+                   故直接导航当前页以保证必定跳转；「立即跳转」按钮走 window.open（手势内，安全） */
+                closeJump();
+                window.location.href = u;
+            }
+
+            window.openJump = function (url, target) {
+                if (morph.classList.contains('show') || settled) return;
+                settled = true;                          /* 动画期锁定反向入口 */
+                jumpUrl = url || '';
+                jumpTarget = target || '_blank';
+                if (urlEl) urlEl.textContent = jumpUrl;
+                var rn = naturalRect();
+                var r1 = main.getBoundingClientRect();
+                var v = varsTo(rn,
+                    r1.left + r1.width / 2, r1.top + r1.height / 2,
+                    r1.width, r1.height);
+                setVars(v.mx, v.my, v.sx, v.sy); flush();
+                freeze(false);
+                morph.classList.add('show');
+                setVars(0, 0, 1, 1);
+                main.classList.add('card-hide');
+                startCountdown();
+                setTimeout(function () { settled = false; }, SPRING_MS);
+            };
+
+            window.closeJump = function () {
+                if (!morph.classList.contains('show') || settled) return;
+                settled = true;
+                clearCountdown();
+                var rn = naturalRect();
+                var rg = main.getBoundingClientRect();
+                var v = varsTo(rn,
+                    rg.left + rg.width / 2, rg.top + rg.height / 2,
+                    main.offsetWidth, main.offsetHeight);
+                freeze(false);
+                setVars(v.mx, v.my, v.sx, v.sy);
+                morph.classList.remove('show');
+                main.classList.remove('card-hide');
+                setTimeout(function () {
+                    freeze(true);
+                    setVars(0, 0, 1, 1); flush();
+                    freeze(false);
+                    settled = false;
+                }, SPRING_MS + 20);
+            };
+
+            /* 立即跳转：用户手势内调用，window.open 不会被拦截 */
+            window.jumpNow = function () {
+                if (!morph.classList.contains('show') || settled) return;
+                clearCountdown();
+                var u = jumpUrl, t = jumpTarget || '_blank';
+                window.open(u, t);
+                closeJump();
+            };
+
+            /* 拦截大卡片内所有真实导航超链接（排除 javascript:/带 onclick 的赞助图标等） */
+            if (main) {
+                main.addEventListener('click', function (e) {
+                    var a = e.target.closest ? e.target.closest('a') : null;
+                    if (!a) return;
+                    var href = a.getAttribute('href') || '';
+                    if (href.indexOf('javascript:') === 0) return;   /* 赞助图标等 */
+                    if (a.hasAttribute('onclick')) return;           /* 双重保险 */
+                    if (href.charAt(0) === '#') return;              /* 页内锚点 */
+                    e.preventDefault();
+                    openJump(a.href, a.getAttribute('target'));
+                });
+            }
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeJump();
             });
         })();
     </script>

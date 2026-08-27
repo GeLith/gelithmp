@@ -984,6 +984,73 @@ body.night-mode {
     font-size: 1.05em;
 }
 
+/* —— 跳转确认卡：视觉对齐赞助卡，内容含倒计时 / 网址 / 双胶囊按钮 —— */
+.jump-card-inner {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 3em 2.5em;
+    text-align: center;
+    z-index: 2;
+}
+.jump-card-inner:hover {
+    will-change: auto;   /* 与捐赠卡一致：避免沦为 backdrop root 致玻璃采空 */
+}
+.jump-tip {
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 0.4em;
+    font-size: 1.05em;
+}
+.jump-url {
+    color: #fff;
+    font-size: 1.25em;
+    font-weight: 700;
+    word-break: break-all;
+    margin-bottom: 0.6em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.jump-countdown {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 1em;
+    margin-bottom: 2em;
+}
+.jump-countdown #jumpSeconds {
+    font-weight: 700;
+    font-size: 1.4em;
+    color: #fff;
+}
+.jump-btns {
+    display: flex;
+    gap: 1em;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+/* 胶囊按钮 */
+.pill-btn {
+    border: none;
+    cursor: pointer;
+    padding: 0.7em 1.8em;
+    border-radius: 999px;          /* 胶囊形 */
+    font-size: 1em;
+    font-weight: 600;
+    color: #fff;
+    transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+.pill-btn:hover { transform: translateY(-2px); }
+.pill-btn:active { transform: translateY(0); opacity: 0.9; }
+.pill-primary {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+.pill-secondary {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 .qr-grid {
     display: flex;
     gap: 2em;
@@ -1042,4 +1109,11 @@ body.night-mode {
         top: 6px;
         right: 10px;
     }
+    .jump-card-inner {
+        padding: 2em 1.2em;
+        width: 100%;
+        max-width: 100%;
+    }
+    .jump-url { font-size: 1.05em; }
+    .pill-btn { padding: 0.6em 1.4em; font-size: 0.95em; }
 }

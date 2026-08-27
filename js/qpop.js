@@ -15,7 +15,10 @@
     var cards = Array.prototype.slice.call(document.querySelectorAll('.card'));
     /* 赞助弹卡的显隐由页面自身逻辑（open/closeDonate + 专属过渡）接管，
        不参与 Q 弹入场/果冻，否则其 opacity 会被 .in 永久置 1 导致无淡入淡出 */
-    cards = cards.filter(function (c) { return !c.classList.contains('donate-card-inner'); });
+    cards = cards.filter(function (c) {
+        return !c.classList.contains('donate-card-inner') &&
+               !c.classList.contains('jump-card-inner');
+    });
     if (!cards.length) return;
 
     var visible = cards.slice(); // 无 IO 时退化为全量
