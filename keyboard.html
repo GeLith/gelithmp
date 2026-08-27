@@ -443,9 +443,7 @@
             color: var(--ink);
         }
 
-        /* 二级卡片 / 二级按钮：改为纯平铺面板，不再使用 backdrop-filter 玻璃。
-           父级 .card 的液态玻璃（::before）保留；小卡片本身取消玻璃，
-           以半透底色 + 边框呈现，既贴合「取消玻璃」需求，也省去每卡一次 backdrop 合成 */
+        /* 二级卡片取消玻璃，改半透底色+边框的平铺面板（父级 .card 液态玻璃保留） */
         .feature-item,
         .demo-step,
         .method-tab,
@@ -453,25 +451,21 @@
             position: relative;
         }
 
-        /* 性能：本页关闭 qpop.js 的滚动果冻形变（--jqsx/--jqsy），
-           避免大卡 backdrop-filter 在滚动时被迫重算而卡顿；
-           入场 Q 弹与悬停倾斜不受影响。!important 覆盖 qpop.js 写入的内联变量
-           （内联非 important 低于样式表 important），故滚动时不再有几何形变 → 不再触发玻璃重算 */
+        /* 本页关闭 qpop 滚动果冻：--jqsx/--jqsy 压 1，!important 覆盖其内联变量，
+           省去大卡 backdrop-filter 滚动重算（入场/倾斜不受影响） */
         .card {
             --jqsx: 1 !important;
             --jqsy: 1 !important;
         }
 
-        /* 修复：悬停大卡时 main.css 的 .card:hover 置 will-change:transform，
-           会把卡片晋升为 GPU 层、沦为 backdrop 根 → 其 ::before 液态玻璃扭曲「采空」短暂消失
-           （与 main.css:948 赞助卡同款问题）。本页压回 auto：保留悬停倾斜交互（仅普通 transform，
-           不建 backdrop 根），同时保住玻璃。仅本页生效，不动共享文件。 */
+        /* 悬停压回 will-change:auto：main.css 的 .card:hover 置 will-change:transform 会令卡片
+           沦为 backdrop 根、玻璃采空（同 main.css:948 赞助卡）；普通 transform 保留倾斜 */
         .card:hover {
             will-change: auto !important;
         }
 
         @media (prefers-reduced-motion: no-preference) {
-            /* Hero 内部元素错峰弹入（卡片级通用 Q 弹动效见 css/qpop.css） */
+            /* Hero 内部元素错峰弹入（卡片级 Q 弹见 css/qpop.css） */
             .hero-card > *:not(.glass-surface__filter) {
                 opacity: 0;
                 transform: translateY(16px);
@@ -483,26 +477,14 @@
             .hero-card > div:nth-of-type(4) { animation-delay: 0.29s; }
             .hero-card > div:nth-of-type(5) { animation-delay: 0.37s; }
 
-            /* 小球：入场后恢复常驻浮动（原 ball-float 被 .hero-card > * 的 heroIn 覆盖而永不播放） */
+            /* 小球入场后恢复常驻浮动（ball-float 被 heroIn 覆盖，需并列声明） */
             .hero-card > .ball-icon {
                 animation: heroIn 0.75s cubic-bezier(0.34, 1.85, 0.64, 1) 0.05s forwards,
                            ball-float 3.6s ease-in-out 0.8s infinite;
             }
-        }
 
-        @keyframes heroIn {
-            to { opacity: 1; transform: none; }
-        }
-
-        /* —— 液态玻璃宿主入场覆写（覆盖共享 qpop 的 cardPop）——
-           铁律（见 index.html:142）：玻璃主卡 opacity 恒 1 —— opacity<1 即沦为 backdrop root，
-           其 ::before 液态扭曲必然失明。共享 cardPop 让卡片 opacity 0→1 爬升 0.9s，
-           正是本页「扭曲短暂消失」的根因。故本页入场纯 transform（translateY+scale），
-           预态 opacity 也压回 1，全程不建 backdrop root，扭曲始终锐利可见。
-           包在 no-preference 内与 qpop 同门控，尊重减弱动效偏好 */
-        @media (prefers-reduced-motion: no-preference) {
-            /* 覆盖共享 qpop.css 的 .js-anim .card:not(.in){opacity:0} 预隐藏：
-               改以 transform 位移表达预态，opacity 恒 1 → 入场前玻璃不采空 */
+            /* 覆盖 qpop 的 cardPop：玻璃主卡 opacity 恒 1（opacity<1 即 backdrop 根→扭曲失明，
+               见 index.html:142），入场改纯 transform；预隐藏态也压回 opacity:1 */
             .js-anim .card:not(.in) {
                 opacity: 1 !important;
             }
@@ -511,11 +493,15 @@
                 animation-duration: 0.6s;
                 animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
             }
-            /* 纯 transform 入场：关键帧不含 opacity，卡片始终 opacity:1，绝不建 backdrop root */
-            @keyframes glassCardIn {
-                0%   { transform: translateY(46px) scale(0.90); }
-                100% { transform: translateY(0) scale(1); }
-            }
+        }
+
+        @keyframes heroIn {
+            to { opacity: 1; transform: none; }
+        }
+
+        @keyframes glassCardIn {
+            0%   { transform: translateY(46px) scale(0.90); }
+            100% { transform: translateY(0) scale(1); }
         }
 
         @media (max-width: 768px) {
@@ -884,8 +870,7 @@
     <script>
         /* 倾斜 + 鼠标辉光：对齐首页设计规范（复用 qpop.css 的 transform 过渡与 main.css 的 .mouse-follower/.gradual-blur） */
         (function () {
-            /* 尊重「减弱动效」偏好：main.css 已在 reduce 下隐藏鼠标辉光，
-               此处同步跳过卡片倾斜，避免为偏好减弱动效的用户强加位移 */
+            /* 尊重「减弱动效」偏好：跳过卡片倾斜（main.css 已在 reduce 下隐藏鼠标辉光） */
             if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
             var mouseFollower = document.getElementById('mouseFollower');
@@ -901,8 +886,7 @@
                     if (ev.animationName === 'cardPop' || ev.animationName === 'glassCardIn') card._popDone = true;
                 });
                 card.addEventListener('mousemove', function (e) {
-                    var isPopup = card.classList.contains('donate-card-inner') || card.classList.contains('jump-card-inner');
-                    if (!isPopup && (!card.classList.contains('in') || !card._popDone)) return;
+                if (!card.classList.contains('in') || !card._popDone) return;
                     pendingEvt = e;
                     if (pendingEvt._queued) return;
                     pendingEvt._queued = true;
