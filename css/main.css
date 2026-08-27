@@ -1001,7 +1001,8 @@ body.night-mode {
     will-change: auto;   /* 与捐赠卡一致：避免沦为 backdrop root 致玻璃采空 */
 }
 .jump-tip {
-    color: rgba(255, 255, 255, 0.6);
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
     margin-bottom: 0.4em;
     font-size: 1.05em;
 }
@@ -1014,7 +1015,8 @@ body.night-mode {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 .jump-countdown {
-    color: rgba(255, 255, 255, 0.75);
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
     font-size: 1em;
     margin-bottom: 2em;
 }
