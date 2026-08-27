@@ -20,17 +20,10 @@
             --glass-line: rgba(255, 255, 255, 0.12);
         }
 
-        body {
-            /* 与主页共用 main.css 壁纸（css/day.jpg）：
-                原先的动画渐变在玻璃卡片背后每帧变化，
-                会迫使 SVG 液态滤镜持续重算，是掉帧根源 */
-        }
+        /* 与主页共用 main.css 壁纸（css/day.jpg）：
+             原先的动画渐变在玻璃卡片背后每帧变化，
+             会迫使 SVG 液态滤镜持续重算，是掉帧根源 */
 
-        @keyframes gradient-shift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
 
         .page-wrap {
             width: 100%;
@@ -63,7 +56,7 @@
             margin: 0 auto 1.4em;
             box-shadow: 0 14px 44px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
             border: 2px solid rgba(255, 255, 255, 0.25);
-            animation: ball-float 3.6s ease-in-out infinite;
+            will-change: transform;
         }
 
         .ball-icon svg {
@@ -94,6 +87,7 @@
             font-size: 2.8em;
             font-weight: 750;
             letter-spacing: -0.01em;
+            color: #ffffff;
             background: linear-gradient(135deg, #ffffff, rgba(255, 255, 255, 0.65));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -200,7 +194,7 @@
         }
 
         .feature-item {
-            background: var(--glass);
+            background: rgba(255, 255, 255, 0.1);
             border: 1px solid var(--glass-line);
             border-radius: 16px;
             padding: 1.8em 1.5em;
@@ -210,7 +204,7 @@
 
         .feature-item:hover {
             transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.09);
+            background: rgba(255, 255, 255, 0.16);
             border-color: rgba(255, 255, 255, 0.45);
         }
 
@@ -251,7 +245,7 @@
             max-width: 220px;
             text-align: center;
             padding: 2em 1.5em;
-            background: var(--glass);
+            background: rgba(255, 255, 255, 0.1);
             border: 1px solid var(--glass-line);
             border-radius: 16px;
             transition: transform 0.3s ease, border-color 0.3s ease;
@@ -308,7 +302,7 @@
             padding: 1.1em 1em;
             text-align: center;
             border-radius: 14px;
-            background: var(--glass);
+            background: rgba(255, 255, 255, 0.1);
             border: 1px solid var(--glass-line);
             color: var(--ink-faint);
             cursor: pointer;
@@ -413,7 +407,7 @@
             display: flex;
             gap: 0.7em;
             align-items: flex-start;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             padding: 1em 1.2em;
@@ -449,17 +443,31 @@
             color: var(--ink);
         }
 
-        /* 二级卡片 / 二级按钮：液态玻璃 + 边缘扭曲（与大卡片同款）。
-           父级 .card 的模糊已移至其 ::before（见 main.css），
-           因此后代 backdrop-filter 能真正折射页面壁纸，边缘扭曲与大卡片一致 */
+        /* 二级卡片 / 二级按钮：改为纯平铺面板，不再使用 backdrop-filter 玻璃。
+           父级 .card 的液态玻璃（::before）保留；小卡片本身取消玻璃，
+           以半透底色 + 边框呈现，既贴合「取消玻璃」需求，也省去每卡一次 backdrop 合成 */
         .feature-item,
         .demo-step,
         .method-tab,
         .tip-box {
             position: relative;
-            backdrop-filter: var(--filter-id, blur(6px) saturate(1.4));
-            -webkit-backdrop-filter: var(--filter-id, blur(6px) saturate(1.4));
-            will-change: backdrop-filter;
+        }
+
+        /* 性能：本页关闭 qpop.js 的滚动果冻形变（--jqsx/--jqsy），
+           避免大卡 backdrop-filter 在滚动时被迫重算而卡顿；
+           入场 Q 弹与悬停倾斜不受影响。!important 覆盖 qpop.js 写入的内联变量
+           （内联非 important 低于样式表 important），故滚动时不再有几何形变 → 不再触发玻璃重算 */
+        .card {
+            --jqsx: 1 !important;
+            --jqsy: 1 !important;
+        }
+
+        /* 修复：悬停大卡时 main.css 的 .card:hover 置 will-change:transform，
+           会把卡片晋升为 GPU 层、沦为 backdrop 根 → 其 ::before 液态玻璃扭曲「采空」短暂消失
+           （与 main.css:948 赞助卡同款问题）。本页压回 auto：保留悬停倾斜交互（仅普通 transform，
+           不建 backdrop 根），同时保住玻璃。仅本页生效，不动共享文件。 */
+        .card:hover {
+            will-change: auto !important;
         }
 
         @media (prefers-reduced-motion: no-preference) {
@@ -469,11 +477,17 @@
                 transform: translateY(16px);
                 animation: heroIn 0.75s cubic-bezier(0.34, 1.85, 0.64, 1) forwards;
             }
-            .hero-card > *:nth-child(1) { animation-delay: 0.05s; }
-            .hero-card > *:nth-child(2) { animation-delay: 0.13s; }
-            .hero-card > *:nth-child(3) { animation-delay: 0.21s; }
-            .hero-card > *:nth-child(4) { animation-delay: 0.29s; }
-            .hero-card > *:nth-child(5) { animation-delay: 0.37s; }
+            .hero-card > div:nth-of-type(1) { animation-delay: 0.05s; }
+            .hero-card > div:nth-of-type(2) { animation-delay: 0.13s; }
+            .hero-card > div:nth-of-type(3) { animation-delay: 0.21s; }
+            .hero-card > div:nth-of-type(4) { animation-delay: 0.29s; }
+            .hero-card > div:nth-of-type(5) { animation-delay: 0.37s; }
+
+            /* 小球：入场后恢复常驻浮动（原 ball-float 被 .hero-card > * 的 heroIn 覆盖而永不播放） */
+            .hero-card > .ball-icon {
+                animation: heroIn 0.75s cubic-bezier(0.34, 1.85, 0.64, 1) 0.05s forwards,
+                           ball-float 3.6s ease-in-out 0.8s infinite;
+            }
         }
 
         @keyframes heroIn {
@@ -481,19 +495,25 @@
         }
 
         /* —— 液态玻璃宿主入场覆写（覆盖共享 qpop 的 cardPop）——
-           规范：opacity<1 的元素是 backdrop root，其 ::before 的液态扭曲在根存续期间必然失明。
-           cardPop 让卡片自身 opacity 爬升整整 0.9s → 扭曲迟到「消失后再出现」。
-           此处改为前 8%（约 48ms）即达不透明，root 存续压缩到不可感知；上滑位移照常走完。
+           铁律（见 index.html:142）：玻璃主卡 opacity 恒 1 —— opacity<1 即沦为 backdrop root，
+           其 ::before 液态扭曲必然失明。共享 cardPop 让卡片 opacity 0→1 爬升 0.9s，
+           正是本页「扭曲短暂消失」的根因。故本页入场纯 transform（translateY+scale），
+           预态 opacity 也压回 1，全程不建 backdrop root，扭曲始终锐利可见。
            包在 no-preference 内与 qpop 同门控，尊重减弱动效偏好 */
         @media (prefers-reduced-motion: no-preference) {
+            /* 覆盖共享 qpop.css 的 .js-anim .card:not(.in){opacity:0} 预隐藏：
+               改以 transform 位移表达预态，opacity 恒 1 → 入场前玻璃不采空 */
+            .js-anim .card:not(.in) {
+                opacity: 1 !important;
+            }
             .js-anim .card.in {
                 animation-name: glassCardIn;
                 animation-duration: 0.6s;
                 animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
             }
+            /* 纯 transform 入场：关键帧不含 opacity，卡片始终 opacity:1，绝不建 backdrop root */
             @keyframes glassCardIn {
-                0%   { opacity: 0; transform: translateY(46px) scale(0.96); }
-                8%   { opacity: 1; }
+                0%   { transform: translateY(46px) scale(0.90); }
                 100% { transform: translateY(0) scale(1); }
             }
         }
@@ -588,7 +608,7 @@
         </div>
 
         <div class="method-tabs">
-            <div class="method-tab glass-2 active" data-method="scriptcat">
+            <div class="method-tab active" data-method="scriptcat" tabindex="0" role="tab" aria-selected="true">
                 <div class="mt-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M6 10 L6 6 L9 9"/>
@@ -602,7 +622,7 @@
                 <h3>脚本猫安装 <span class="badge">推荐</span></h3>
                 <p>安装脚本猫扩展后，一键添加脚本</p>
             </div>
-            <div class="method-tab glass-2" data-method="crx">
+            <div class="method-tab" data-method="crx" tabindex="0" role="tab" aria-selected="false">
                 <div class="mt-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 3 V21"/>
@@ -616,7 +636,7 @@
                 <h3>拖拽安装</h3>
                 <p>下载 .crx 文件，直接拖到扩展管理页面</p>
             </div>
-            <div class="method-tab glass-2" data-method="unpacked">
+            <div class="method-tab" data-method="unpacked" tabindex="0" role="tab" aria-selected="false">
                 <div class="mt-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M3 7 H13 L21 14 V20 H3 Z"/>
@@ -725,7 +745,7 @@
             </div>
         </div>
 
-        <div class="tip-box glass-2">
+        <div class="tip-box">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9.5 18 H14.5"/>
                 <path d="M10.5 21 H13.5"/>
@@ -738,7 +758,7 @@
     <div class="card s-card section-card">
         <div class="section-title">功能特点</div>
         <div class="features-grid">
-            <div class="feature-item glass-2">
+            <div class="feature-item">
                 <div class="feature-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="7.5"/>
@@ -748,7 +768,7 @@
                 <h3>悬浮球设计</h3>
                 <p>右上角蓝色小球，不遮挡内容，点击展开操作面板</p>
             </div>
-            <div class="feature-item glass-2">
+            <div class="feature-item">
                 <div class="feature-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12.5" r="8"/>
@@ -759,7 +779,7 @@
                 <h3>延迟输入</h3>
                 <p>可设置开始延迟，给你时间切换到目标输入框</p>
             </div>
-            <div class="feature-item glass-2">
+            <div class="feature-item">
                 <div class="feature-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M13 2 L4 14 H11 L10 22 L20 9 H13 Z"/>
@@ -768,7 +788,7 @@
                 <h3>速度可调</h3>
                 <p>字符间隔自由设置，快慢由你决定</p>
             </div>
-            <div class="feature-item glass-2">
+            <div class="feature-item">
                 <div class="feature-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="9 4 4 9 9 14"/>
@@ -778,7 +798,7 @@
                 <h3>支持换行</h3>
                 <p>多行文本轻松输入，自动处理换行符</p>
             </div>
-            <div class="feature-item glass-2">
+            <div class="feature-item">
                 <div class="feature-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 3 V21"/>
@@ -799,17 +819,17 @@
         <div class="section-title">三步搞定</div>
         <p style="text-align:center;color:rgba(255,255,255,0.5);margin-bottom:2em;">简单到不需要说明书</p>
         <div class="demo-steps">
-            <div class="demo-step glass-2">
+            <div class="demo-step">
                 <div class="step-num">1</div>
                 <h3>点击小球</h3>
                 <p>点击网页右上角的蓝色小球，展开面板</p>
             </div>
-            <div class="demo-step glass-2">
+            <div class="demo-step">
                 <div class="step-num">2</div>
                 <h3>输入文字</h3>
                 <p>粘贴或输入你要模拟的文字，设置延迟时间</p>
             </div>
-            <div class="demo-step glass-2">
+            <div class="demo-step">
                 <div class="step-num">3</div>
                 <h3>点击开始</h3>
                 <p>在延迟时间内切换到目标输入框，自动开始输入</p>
@@ -826,17 +846,34 @@
     </div>
 </div>
 
+    <div class="mouse-follower" id="mouseFollower" aria-hidden="true"></div>
+    <div class="gradual-blur" aria-hidden="true">
+        <b style="--b:8px;--s:55%"></b>
+        <b style="--b:20px;--s:0%"></b>
+    </div>
+
 <script>
     (function() {
         var tabs = document.querySelectorAll('.method-tab');
+        function activate(tab) {
+            tabs.forEach(function(t) {
+                t.classList.remove('active');
+                t.setAttribute('aria-selected', 'false');
+            });
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+            var method = tab.getAttribute('data-method');
+            document.getElementById('steps-crx').classList.toggle('hidden', method !== 'crx');
+            document.getElementById('steps-unpacked').classList.toggle('hidden', method !== 'unpacked');
+            document.getElementById('steps-scriptcat').classList.toggle('hidden', method !== 'scriptcat');
+        }
         tabs.forEach(function(tab) {
-            tab.addEventListener('click', function() {
-                tabs.forEach(function(t) { t.classList.remove('active'); });
-                tab.classList.add('active');
-                var method = tab.getAttribute('data-method');
-                document.getElementById('steps-crx').classList.toggle('hidden', method !== 'crx');
-                document.getElementById('steps-unpacked').classList.toggle('hidden', method !== 'unpacked');
-                document.getElementById('steps-scriptcat').classList.toggle('hidden', method !== 'scriptcat');
+            tab.addEventListener('click', function() { activate(tab); });
+            tab.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                    e.preventDefault();
+                    activate(tab);
+                }
             });
         });
     })();
@@ -844,5 +881,80 @@
 </script>
 <script src="js/qpop.js"></script>
     <script src="js/glass-surface.js"></script>
+    <script>
+        /* 倾斜 + 鼠标辉光：对齐首页设计规范（复用 qpop.css 的 transform 过渡与 main.css 的 .mouse-follower/.gradual-blur） */
+        (function () {
+            /* 尊重「减弱动效」偏好：main.css 已在 reduce 下隐藏鼠标辉光，
+               此处同步跳过卡片倾斜，避免为偏好减弱动效的用户强加位移 */
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+            var mouseFollower = document.getElementById('mouseFollower');
+            if (mouseFollower) mouseFollower.style.willChange = 'transform';
+            var mouseX = 0, mouseY = 0, followerX = 0, followerY = 0;
+            document.addEventListener('mousemove', function (e) {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            document.querySelectorAll('.card').forEach(function (card) {
+                var pendingEvt = null, lastTx = null, lastTy = null;
+                card.addEventListener('animationend', function (ev) {
+                    if (ev.animationName === 'cardPop' || ev.animationName === 'glassCardIn') card._popDone = true;
+                });
+                card.addEventListener('mousemove', function (e) {
+                    var isPopup = card.classList.contains('donate-card-inner') || card.classList.contains('jump-card-inner');
+                    if (!isPopup && (!card.classList.contains('in') || !card._popDone)) return;
+                    pendingEvt = e;
+                    if (pendingEvt._queued) return;
+                    pendingEvt._queued = true;
+                    requestAnimationFrame(function () {
+                        var evt = pendingEvt;
+                        pendingEvt = null;
+                        if (!evt) return;
+                        var r = card.getBoundingClientRect();
+                        if (!r.width || !r.height) return;
+                        var tx = ((evt.clientY - r.top - r.height / 2) / (r.height / 2)) * -5;
+                        var ty = ((evt.clientX - r.left - r.width / 2) / (r.width / 2)) * 5;
+                        tx = +tx.toFixed(2); ty = +ty.toFixed(2);
+                        if (tx === lastTx && ty === lastTy) return;
+                        lastTx = tx; lastTy = ty;
+                        card.style.setProperty('--tiltx', tx.toFixed(2) + 'deg');
+                        card.style.setProperty('--tilty', ty.toFixed(2) + 'deg');
+                        card.style.setProperty('--tilts', '1.015');
+                    });
+                });
+                card.addEventListener('mouseleave', function () {
+                    pendingEvt = null; lastTx = null; lastTy = null;
+                    card.style.setProperty('--tiltx', '0deg');
+                    card.style.setProperty('--tilty', '0deg');
+                    card.style.setProperty('--tilts', '1');
+                });
+            });
+            var rafId = null;
+            function animate() {
+                rafId = null;
+                followerX += (mouseX - followerX) * 0.1;
+                followerY += (mouseY - followerY) * 0.1;
+                if (mouseFollower) {
+                    mouseFollower.style.transform = 'translate3d(' + followerX + 'px,' + followerY + 'px,0) translate(-50%,-50%)';
+                }
+                if (Math.abs(mouseX - followerX) > 0.3 || Math.abs(mouseY - followerY) > 0.3) {
+                    rafId = requestAnimationFrame(animate);
+                } else {
+                    document.addEventListener('mousemove', wakeLoop, { once: true });
+                }
+            }
+            function wakeLoop() {
+                if (rafId === null) rafId = requestAnimationFrame(animate);
+            }
+            wakeLoop();
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden && rafId !== null) {
+                    cancelAnimationFrame(rafId);
+                    rafId = null;
+                    document.addEventListener('mousemove', wakeLoop, { once: true });
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

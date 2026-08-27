@@ -177,17 +177,7 @@
 
     /* 旧版 FLIP 尺寸变形支撑类（card-fixed/card-pin/card-swap-noanim）已移除：
        两层 transform FLIP 不再需要坐标钉位与过渡禁用 */
-</style>
-    <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
-        <filter id="liquid-glass" x="-30%" y="-30%" width="160%" height="160%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="3" result="noise">
-                <animate attributeName="baseFrequency" values="0.01;0.015;0.008;0.01" dur="10s" repeatCount="indefinite"/>
-            </feTurbulence>
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G">
-                <animate attributeName="scale" values="20;28;16;22;20" dur="6s" repeatCount="indefinite"/>
-            </feDisplacementMap>
-        </filter>
-    </svg>
+    </style>
 </head>
 <body>
     <div class="loading-screen" id="loadingScreen">
