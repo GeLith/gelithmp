@@ -160,7 +160,7 @@
                                      确保 backdrop root 永不形成 */
         visibility: visible;      /* 恒可见可渲染：玻璃恒温不丢 */
         pointer-events: none;
-        --main-scale: 0.36;       /* 缩到赞赏卡覆盖范围内，藏于其下；opacity 不参与 */
+        --main-scale: 0.08;       /* 纵深更深：主卡缩成一点藏于弹卡正后，透过玻璃仅余微点；opacity 不参与 */
         transition:
             transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
@@ -298,7 +298,7 @@
             <button class="donate-close" onclick="closeJump()">&times;</button>
             <p class="jump-tip">你即将跳转到</p>
             <div class="jump-url" id="jumpUrl"></div>
-            <div class="jump-countdown">倒计时 <span id="jumpSeconds">3</span> 秒后自动跳转</div>
+            <div class="jump-countdown">倒计时 <span id="jumpSeconds">5</span> 秒后自动跳转</div>
             <div class="jump-btns">
                 <button class="pill-btn pill-primary" id="jumpNow" onclick="jumpNow()">立即跳转</button>
                 <button class="pill-btn pill-secondary" id="jumpCancel" onclick="closeJump()">取消跳转</button>
@@ -529,7 +529,7 @@
             var secEl = document.getElementById('jumpSeconds');
             if (!morph || !main) return;
 
-            var SPRING_MS = 550, settled = false, COUNTDOWN = 3;
+            var SPRING_MS = 550, settled = false, COUNTDOWN = 5;
             var countdownTimer = null, jumpUrl = '', jumpTarget = '_blank';
 
             function flush() { void morph.offsetWidth; }
