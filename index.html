@@ -157,12 +157,22 @@
     }
     .card-container > .main-card.card-hide {
         opacity: 1;               /* 显式恒 1：压过 main.css 通用 .card-hide 的 opacity:0，
-                                     确保 backdrop root 永不形成 */
+                                      确保 backdrop root 永不形成 */
         visibility: visible;      /* 恒可见可渲染：玻璃恒温不丢 */
         pointer-events: none;
         --main-scale: 0.08;       /* 纵深更深：主卡缩成一点藏于弹卡正后，透过玻璃仅余微点；opacity 不参与 */
         transition:
             transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* 还原 Q 弹：弹卡关闭后主卡从极小点（0.08）过冲弹回原尺寸（约 1.12 再落定 1）。
+       用「还原专用弹性过渡」而非独立 @keyframes animation —— 这样还原结束、移除 .restoring
+       类时主卡已停在 scale(1)（= 基态值），基态 transition 不会对相同值二次起跳，
+       故不会出现「二次动画」。
+       主卡 transform 无 translate/FLIP（FLIP 变量 --mx/--my/--sx/--sy 只写给 morph，从不写给主卡），
+       故只改变 scale 段、倾斜段用 var 原样保留，绝不会位移错乱。 */
+    .card-container > .main-card.restoring {
+        transition: transform 0.6s cubic-bezier(0.34, 1.7, 0.5, 1);
     }
 
     /* 旧版 FLIP 尺寸变形支撑类（card-fixed/card-pin/card-swap-noanim）已移除：
@@ -477,6 +487,7 @@
                 freeze(false);
                 morph.classList.add('show');             /* 0.16s 快速淡入，首帧即有玻璃 */
                 setVars(0, 0, 1, 1);                     /* 非等比宽高 Q 弹至自然尺寸 */
+                main.classList.remove('restoring');       /* 防止上次还原动画残留 */
                 main.classList.add('card-hide');
                 setTimeout(function () { settled = false; }, SPRING_MS);
             };
@@ -495,12 +506,16 @@
                    低透明度掩藏（打开亦然），不再全程不透明地暴露涂抹变形 */
                 morph.classList.remove('show');          /* 0.16s 快速淡出 */
                 main.classList.remove('card-hide');      /* 主卡同步交叉淡入，无突兀跳变 */
+                main.classList.add('restoring');          /* 触发还原 Q 弹 */
                 setTimeout(function () {                 /* 飞行结束后复位变量（供下次打开测量自然矩形） */
                     freeze(true);
                     setVars(0, 0, 1, 1); flush();
                     freeze(false);
                     settled = false;
                 }, SPRING_MS + 20);
+                setTimeout(function () {                 /* 等 Q 弹播完再撤类，避免中途截断停在 0.98 */
+                    main.classList.remove('restoring');   /* 交还常驻 transform，停在 scale(1) */
+                }, 760);
             };
 
             document.addEventListener('keydown', function (e) {
@@ -592,6 +607,7 @@
                 freeze(false);
                 morph.classList.add('show');
                 setVars(0, 0, 1, 1);
+                main.classList.remove('restoring');       /* 防止上次还原动画残留 */
                 main.classList.add('card-hide');
                 startCountdown();
                 setTimeout(function () { settled = false; }, SPRING_MS);
@@ -610,12 +626,16 @@
                 setVars(v.mx, v.my, v.sx, v.sy);
                 morph.classList.remove('show');
                 main.classList.remove('card-hide');
+                main.classList.add('restoring');          /* 触发还原 Q 弹 */
                 setTimeout(function () {
                     freeze(true);
                     setVars(0, 0, 1, 1); flush();
                     freeze(false);
                     settled = false;
                 }, SPRING_MS + 20);
+                setTimeout(function () {                 /* 等 Q 弹播完再撤类，避免中途截断停在 0.98 */
+                    main.classList.remove('restoring');   /* 交还常驻 transform，停在 scale(1) */
+                }, 760);
             };
 
             /* 立即跳转：用户手势内调用，window.open 不会被拦截 */
