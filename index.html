@@ -178,8 +178,40 @@
     /* 旧版 FLIP 尺寸变形支撑类（card-fixed/card-pin/card-swap-noanim）已移除：
        两层 transform FLIP 不再需要坐标钉位与过渡禁用 */
     </style>
+
+    <!-- 移动端根治：赞赏卡/跳转卡关闭按钮 X 被设备顶部栏/刘海遮挡。用安全区避让；桌面零改动 -->
+    <style>
+    .kb-bg { display: none; }
+    @media (max-width: 768px) {
+        .kb-bg {
+            display: block;
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.25) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 200, 124, 0.25) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(100, 210, 255, 0.15) 0%, transparent 50%),
+                url("css/day.jpg") center / cover no-repeat;
+            transform: translateZ(0);
+            height: 100vh;
+            height: 100dvh;
+        }
+        body { background: transparent; }
+        .glass-surface--fallback { background: rgba(255, 255, 255, 0.10); }
+        .donate-card-inner,
+        .jump-card-inner {
+            padding-top: calc(3em + env(safe-area-inset-top, 0px));
+        }
+        .donate-close {
+            top: calc(10px + env(safe-area-inset-top, 0px));
+        }
+    }
+    </style>
 </head>
 <body>
+    <!-- 移动端固定壁纸层：替代 background-attachment:fixed（卡顿/壁纸横跳/iOS 毛玻璃）。桌面隐藏 -->
+    <div class="kb-bg" aria-hidden="true"></div>
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-spinner"></div>
         <div class="loading-text">Loading...</div>

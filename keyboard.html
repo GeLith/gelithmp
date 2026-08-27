@@ -514,8 +514,34 @@
             .dl-row { flex-direction: column; }
         }
     </style>
+
+    <!-- 移动端根治：background-attachment:fixed 三大坑（卡顿 / 壁纸横跳 / iOS 丢弃→毛玻璃）
+         统一用 .kb-bg 固定层替代；桌面与首页零改动（本块仅在 max-width:768px 生效） -->
+    <style>
+    .kb-bg { display: none; }
+    @media (max-width: 768px) {
+        .kb-bg {
+            display: block;
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.25) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 200, 124, 0.25) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(100, 210, 255, 0.15) 0%, transparent 50%),
+                url("css/day.jpg") center / cover no-repeat;
+            transform: translateZ(0);
+            height: 100vh;
+            height: 100dvh;
+        }
+        body { background: transparent; }
+        .glass-surface--fallback { background: rgba(255, 255, 255, 0.10); }
+    }
+    </style>
 </head>
 <body>
+    <!-- 移动端固定壁纸层：替代 background-attachment:fixed（每帧重绘→卡顿；地址栏收起→错位横跳；iOS 丢弃→玻璃变毛玻璃）。桌面隐藏，由 body 原固定背景提供 -->
+    <div class="kb-bg" aria-hidden="true"></div>
 
 <div class="page-wrap">
     <div class="card s-card hero-card">
@@ -833,10 +859,6 @@
 </div>
 
     <div class="mouse-follower" id="mouseFollower" aria-hidden="true"></div>
-    <div class="gradual-blur" aria-hidden="true">
-        <b style="--b:8px;--s:55%"></b>
-        <b style="--b:20px;--s:0%"></b>
-    </div>
 
 <script>
     (function() {
@@ -868,7 +890,7 @@
 <script src="js/qpop.js"></script>
     <script src="js/glass-surface.js"></script>
     <script>
-        /* 倾斜 + 鼠标辉光：对齐首页设计规范（复用 qpop.css 的 transform 过渡与 main.css 的 .mouse-follower/.gradual-blur） */
+        /* 倾斜 + 鼠标辉光：对齐首页设计规范（复用 qpop.css 的 transform 过渡与 main.css 的 .mouse-follower） */
         (function () {
             /* 尊重「减弱动效」偏好：跳过卡片倾斜（main.css 已在 reduce 下隐藏鼠标辉光） */
             if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -880,6 +902,9 @@
                 mouseX = e.clientX;
                 mouseY = e.clientY;
             });
+            // 仅精确指针（鼠标）设备启用「跟随鼠标倾斜」；手机端（无悬停/粗指针）跳过
+            var canHover = window.matchMedia ? window.matchMedia('(hover: hover) and (pointer: fine)').matches : true;
+            if (canHover) {
             document.querySelectorAll('.card').forEach(function (card) {
                 var pendingEvt = null, lastTx = null, lastTy = null;
                 card.addEventListener('animationend', function (ev) {
@@ -913,6 +938,7 @@
                     card.style.setProperty('--tilts', '1');
                 });
             });
+            }
             var rafId = null;
             function animate() {
                 rafId = null;
