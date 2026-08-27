@@ -179,6 +179,14 @@
 
   /* ---------- 启动：IO 懒加载 + resize 防抖重测 ---------- */
   function start() {
+    /* 移动端（≤768px）：跳过逐卡 SVG 位移滤镜生成——feDisplacementMap 滚动重绘极昂贵，是手机端卡顿根因。
+       直接降级为轻量磨砂玻璃（.glass-surface--fallback 纯 blur），桌面(>768px) 路径零改动。 */
+    if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
+      var mob = document.querySelectorAll('.card, .btn');
+      for (var m = 0; m < mob.length; m++) mob[m].classList.add('glass-surface--fallback');
+      return;
+    }
+
     initVisible();
 
     if ('IntersectionObserver' in window) {

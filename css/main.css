@@ -833,7 +833,7 @@ body.night-mode {
 }
 
 /* ==================== 移动端响应式 ==================== */
-@media only screen and (max-width: 762px) {
+@media only screen and (max-width: 768px) {
     body {
         padding: 1em;
         display: block;
@@ -911,6 +911,26 @@ body.night-mode {
 
     .mouse-follower {
         display: none;
+    }
+
+    /* 移动端禁用逐卡 SVG 液态位移滤镜（feDisplacementMap 滚动重绘极昂贵→卡顿），
+       降级为轻量磨砂玻璃：大/小卡片一致，iPhone(WebKit) 走同款磨砂。桌面(>768px) 不受影响。 */
+    .card::before,
+    .btn,
+    .btn::before,
+    .glass-surface,
+    .glass-surface::before {
+        backdrop-filter: blur(10px) saturate(1.5) !important;
+        -webkit-backdrop-filter: blur(10px) saturate(1.5) !important;
+    }
+    .glass-surface__filter {
+        display: none !important;
+    }
+    .card {
+        background: rgba(255, 255, 255, 0.08) !important;
+    }
+    .glass-surface--fallback {
+        background: rgba(255, 255, 255, 0.10) !important;
     }
 }
 
@@ -1080,7 +1100,7 @@ body.night-mode {
     padding: 6px;
 }
 
-@media only screen and (max-width: 762px) {
+@media only screen and (max-width: 768px) {
     .donate-morph {
         width: 90vw;
         max-width: 90vw;
