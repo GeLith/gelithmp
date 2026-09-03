@@ -164,6 +164,17 @@
         transition:
             transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+    /* 移动端：弹卡打开时主卡缩至 8% 仍可见→微缩残影。
+       覆写为完全透明但保持 visibility+transform 基态，
+       还原（.restoring）时 opacity 渐显、scale 过冲弹回无缝衔接。 */
+    @media (max-width: 768px) {
+        .card-container > .main-card.card-hide {
+            opacity: 0;
+            transition:
+                transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.3s ease;
+        }
+    }
 
     /* 还原 Q 弹：弹卡关闭后主卡从极小点（0.08）过冲弹回原尺寸（约 1.12 再落定 1）。
        用「还原专用弹性过渡」而非独立 @keyframes animation —— 这样还原结束、移除 .restoring
