@@ -212,10 +212,14 @@
         .glass-surface--fallback { background: rgba(255, 255, 255, 0.10); }
         .donate-card-inner,
         .jump-card-inner {
-            padding-top: calc(3em + env(safe-area-inset-top, 0px));
+            /* env(safe-area-inset-top) = 刘海/Dynamic Island
+               + 48px = 浏览器地址栏高度（Safari/Chrome/Edge 通用估算） */
+            padding-top: calc(3em + env(safe-area-inset-top, 0px) + 48px);
         }
         .donate-close {
-            top: calc(10px + env(safe-area-inset-top, 0px));
+            /* env(safe-area-inset-top) = 刘海/Dynamic Island
+               + 48px = 浏览器地址栏高度（Safari/Chrome/Edge 通用估算） */
+            top: calc(10px + env(safe-area-inset-top, 0px) + 48px);
         }
     }
     </style>
