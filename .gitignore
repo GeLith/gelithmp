@@ -4,6 +4,13 @@
 # Playwright MCP 工具数据
 .playwright-mcp/
 
+# Playwright 产物
+playwright-report/
+test-results/
+
+# 依赖
+node_modules/
+
 # 空索引 / 缓存
 .codegraph/
 
