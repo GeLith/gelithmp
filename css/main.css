@@ -839,6 +839,11 @@ body.night-mode {
         display: block;
         min-height: auto;
         overflow-y: auto;
+        /* 移动端简化背景：移除多层径向渐变（增加合成层负担），仅保留纯色/图片 */
+        background: url("day.jpg");
+        background-position: center;
+        background-attachment: fixed;
+        background-size: cover;
     }
 
     main {
@@ -913,15 +918,28 @@ body.night-mode {
         display: none;
     }
 
-    /* 移动端禁用逐卡 SVG 液态位移滤镜（feDisplacementMap 滚动重绘极昂贵→卡顿），
-       降级为轻量磨砂玻璃：大/小卡片一致，iPhone(WebKit) 走同款磨砂。桌面(>768px) 不受影响。 */
+    /* 移动端禁用卡片倾斜效果（mousemove 驱动，手机触摸无意义） */
+    .card {
+        --tiltx: 0deg !important;
+        --tilty: 0deg !important;
+        --tilts: 1 !important;
+        transition: opacity 0.26s ease-out, visibility 0.5s ease, box-shadow 0.4s ease !important;
+    }
+    .card:hover {
+        box-shadow: none;
+    }
+
+    /* 移动端性能优化：
+       1. 禁用 SVG 液态位移滤镜（feDisplacementMap 滚动重绘极昂贵）
+       2. 禁用 backdrop-filter blur（WebKit/Blink 上极贵，手机端最大性能杀手）
+       3. 简化卡片背景（纯半透明，无模糊） */
     .card::before,
     .btn,
     .btn::before,
     .glass-surface,
     .glass-surface::before {
-        backdrop-filter: blur(10px) saturate(1.5) !important;
-        -webkit-backdrop-filter: blur(10px) saturate(1.5) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
     }
     .glass-surface__filter {
         display: none !important;
