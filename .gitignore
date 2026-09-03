@@ -7,6 +7,17 @@
 # 空索引 / 缓存
 .codegraph/
 
+# 测试工具（本地开发验证，非网站交付内容）
+node_modules/
+playwright-report/
+test-results/
+playwright.config.js
+tests/
+
+# 服务器配置（含隐私路径，勿上传）
+.user.ini
+.htaccess
+
 # 备份文件
 *.bak
 *.glassbak
