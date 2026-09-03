@@ -837,7 +837,8 @@ body.night-mode {
     body {
         padding: 1em;
         display: block;
-        min-height: auto;
+        height: auto;
+        min-height: 100vh;
         overflow-y: auto;
         /* 移动端简化背景：移除多层径向渐变（增加合成层负担），仅保留纯色/图片 */
         background: url("day.jpg");
