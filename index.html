@@ -212,14 +212,13 @@
         .glass-surface--fallback { background: rgba(255, 255, 255, 0.10); }
         .donate-card-inner,
         .jump-card-inner {
-            /* env(safe-area-inset-top) = 刘海/Dynamic Island
-               + 48px = 浏览器地址栏高度（Safari/Chrome/Edge 通用估算） */
-            padding-top: calc(3em + env(safe-area-inset-top, 0px) + 48px);
+            padding-top: 3em;
         }
+        /* 手机端 X 按钮移到卡片底部 — 彻底避开浏览器地址栏 */
         .donate-close {
-            /* env(safe-area-inset-top) = 刘海/Dynamic Island
-               + 48px = 浏览器地址栏高度（Safari/Chrome/Edge 通用估算） */
-            top: calc(10px + env(safe-area-inset-top, 0px) + 48px);
+            top: auto;
+            bottom: 10px;
+            right: 14px;
         }
     }
     </style>
