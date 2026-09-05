@@ -155,24 +155,28 @@
         transition:
             transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1); /* 与赞赏卡同款过冲弹簧 */
     }
-    .card-container > .main-card.card-hide {
-        opacity: 1;               /* 显式恒 1：压过 main.css 通用 .card-hide 的 opacity:0，
-                                      确保 backdrop root 永不形成 */
-        visibility: visible;      /* 恒可见可渲染：玻璃恒温不丢 */
+.card-container > .main-card.card-hide {
+        opacity: 0;               /* 完全隐藏：主卡缩到 0.08 后仍有微点残影，
+                                       用 opacity:0 彻底消除。用户无感知 backdrop root 形成，
+                                       主卡 ::before 失效无关紧要（主卡已不可见）。
+                                       赞赏卡/跳转卡有独立 .donate-card-inner 的 ::before，不受此影响 */
+        visibility: hidden;       /* 隐藏后不再响应任何交互，彻底释放 pointer-events */
         pointer-events: none;
-        --main-scale: 0.08;       /* 纵深更深：主卡缩成一点藏于弹卡正后，透过玻璃仅余微点；opacity 不参与 */
+        --main-scale: 0.001;      /* 缩到极小：作为纯纵深占位，几乎不可见 */
         transition:
-            transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity 0.3s ease,
+            transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+            visibility 0s ease 0.3s;
     }
-    /* 移动端：弹卡打开时主卡缩至 8% 仍可见→微缩残影。
-       覆写为完全透明但保持 visibility+transform 基态，
-       还原（.restoring）时 opacity 渐显、scale 过冲弹回无缝衔接。 */
+    /* 移动端：保持与桌面一致，完全透明 */
     @media (max-width: 768px) {
         .card-container > .main-card.card-hide {
             opacity: 0;
+            visibility: hidden;
             transition:
+                opacity 0.3s ease,
                 transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-                opacity 0.3s ease;
+                visibility 0s ease 0.3s;
         }
     }
 
@@ -182,9 +186,11 @@
        故不会出现「二次动画」。
        主卡 transform 无 translate/FLIP（FLIP 变量 --mx/--my/--sx/--sy 只写给 morph，从不写给主卡），
        故只改变 scale 段、倾斜段用 var 原样保留，绝不会位移错乱。 */
-    .card-container > .main-card.restoring {
-        transition: transform 0.6s cubic-bezier(0.34, 1.7, 0.5, 1);
-    }
+.card-container > .main-card.restoring {
+         transition: transform 0.6s cubic-bezier(0.34, 1.7, 0.5, 1),
+                     visibility 0s ease 0s;
+         visibility: visible;
+     }
 
     /* 旧版 FLIP 尺寸变形支撑类（card-fixed/card-pin/card-swap-noanim）已移除：
        两层 transform FLIP 不再需要坐标钉位与过渡禁用 */
@@ -226,13 +232,8 @@
     </style>
 </head>
 <body>
-    <!-- 主题切换按钮 -->
-    <button class="theme-toggle" id="themeToggle" aria-label="切换明暗主题">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12,18C8.68629,18 6,15.3137 6,12C6,8.68629 8.68629,6 12,6C15.3137,6 18,8.68629 18,12C18,15.3137 15.3137,18 12,18ZM12,16C14.2091,16 16,14.2091 16,12C16,9.79086 14.2091,8 12,8C9.79086,8 8,9.79086 8,12C8,14.2091 9.79086,16 12,16ZM11,1H13V4H11V1ZM11,20H13V23H11V20ZM3.51472,4.92893L4.92893,3.51472L7.05025,5.63604L5.63604,7.05025L3.51472,4.92893ZM16.9497,18.364L18.364,16.9497L20.4853,19.0711L19.0711,20.4853L16.9497,18.364ZM19.0711,3.51472L20.4853,4.92893L18.364,7.05025L16.9497,5.63604L19.0711,3.51472ZM5.63604,16.9497L7.05025,18.364L4.92893,20.4853L3.51472,19.0711L5.63604,16.9497ZM23,11V13H20V11H23ZM4,11V13H1V11H4Z"></path>
-        </svg>
-    </button>
     <!-- 移动端固定壁纸层 -->
+    <div class="kb-bg" aria-hidden="true"></div>
     <div class="kb-bg" aria-hidden="true"></div>
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-spinner"></div>
@@ -337,11 +338,11 @@
             <div class="qr-grid">
                 <div class="qr-item">
                     <h3>微信</h3>
-                    <img src="img/wechat-pay.jpg" alt="微信收款码">
+                    <img src="img/alipay.jpg" alt="微信收款码">
                 </div>
                 <div class="qr-item">
                     <h3>支付宝</h3>
-                    <img src="img/alipay.jpg" alt="支付宝收款码">
+                    <img src="img/wechat-pay.jpg" alt="支付宝收款码">
                 </div>
             </div>
         </div>
@@ -468,18 +469,7 @@
                 }
             });
 
-            // 主题切换
-        var themeToggle = document.getElementById('themeToggle');
-        if (themeToggle) {
-            var savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'night') document.body.classList.add('night-mode');
-            themeToggle.addEventListener('click', function() {
-                document.body.classList.toggle('night-mode');
-                localStorage.setItem('theme', document.body.classList.contains('night-mode') ? 'night' : 'day');
-            });
-        }
-
-        window.addEventListener('load', function() {
+            window.addEventListener('load', function() {
             var loading = document.getElementById('loadingScreen');
             if (loading) loading.classList.add('hidden');
         });
