@@ -891,7 +891,7 @@
         tabs.forEach(function(tab) {
             tab.addEventListener('click', function() { activate(tab); });
             tab.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     activate(tab);
                 }
