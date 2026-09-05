@@ -167,15 +167,18 @@
   }
 
   /* ---------- 批量初始化 ---------- */
-  function initVisible() {
-    if (!supportsSVGFilters()) {
-      var all = document.querySelectorAll('.card, .btn');
-      for (var k = 0; k < all.length; k++) all[k].classList.add('glass-surface--fallback');
-      return;
-    }
-    var cards = document.querySelectorAll('.card, .btn');
-    for (var i = 0; i < cards.length; i++) initCard(cards[i]);
-  }
+function initVisible() {
+     /* 跳过赞助卡/跳转卡：加载时隐藏（opacity:0.001），无需SVG滤镜，
+        省去首屏CPU开销——这是刚加载时FLIP卡顿的根因之一 */
+     var selector = '.card:not(.donate-card-inner):not(.jump-card-inner), .btn';
+     if (!supportsSVGFilters()) {
+       var all = document.querySelectorAll(selector);
+       for (var k = 0; k < all.length; k++) all[k].classList.add('glass-surface--fallback');
+       return;
+     }
+     var cards = document.querySelectorAll(selector);
+     for (var i = 0; i < cards.length; i++) initCard(cards[i]);
+   }
 
   /* ---------- 启动：IO 懒加载 + resize 防抖重测 ---------- */
   function start() {

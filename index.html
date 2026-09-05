@@ -518,9 +518,7 @@
                 };
             }
 
-            window.openDonate = function () {
-                if (morph.classList.contains('show') || settled) return;
-                settled = true;                          /* 动画期锁定反向入口 */
+            function doOpenDonate() {
                 var rn = naturalRect();
                 var r1 = main.getBoundingClientRect();   /* 主卡此刻无变形污染 */
                 var v = varsTo(rn,
@@ -535,6 +533,18 @@
                 main.classList.remove('restoring');       /* 防止上次还原动画残留 */
                 main.classList.add('card-hide');
                 setTimeout(function () { settled = false; }, SPRING_MS);
+            }
+
+            window.openDonate = function () {
+                if (morph.classList.contains('show') || settled) return;
+                /* 等待主卡 cardPop 入场动画完成：若在动画中间读取 gBCR，
+                   scale(0.90) 会导致 FLIP 尺寸算错 → 切换卡顿。这是刚加载时卡顿的根因。 */
+                if (!main._popDone) {
+                    requestAnimationFrame(function() { window.openDonate(); });
+                    return;
+                }
+                settled = true;                          /* 动画期锁定反向入口 */
+                doOpenDonate();
             };
 
             window.closeDonate = function () {
@@ -637,26 +647,35 @@
                 window.location.href = u;
             }
 
-            window.openJump = function (url, target) {
-                if (morph.classList.contains('show') || settled) return;
-                settled = true;                          /* 动画期锁定反向入口 */
+function doOpenJump() {
+                 var rn = naturalRect();
+                 var r1 = main.getBoundingClientRect();
+                 var v = varsTo(rn,
+                     r1.left + r1.width / 2, r1.top + r1.height / 2,
+                     r1.width, r1.height);
+                 setVars(v.mx, v.my, v.sx, v.sy); flush();
+                 freeze(false);
+                 morph.classList.add('show');
+                 setVars(0, 0, 1, 1);
+                 main.classList.remove('restoring');       /* 防止上次还原动画残留 */
+                 main.classList.add('card-hide');
+                 startCountdown();
+                 setTimeout(function () { settled = false; }, SPRING_MS);
+             }
+
+             window.openJump = function (url, target) {
+                 if (morph.classList.contains('show') || settled) return;
+                 /* 等待主卡 cardPop 入场动画完成（同 openDonate 修复） */
+if (!main._popDone) {
+                    requestAnimationFrame(function() { window.openJump(); });
+                    return;
+                }
+                settled = true;
                 jumpUrl = url || '';
-                jumpTarget = target || '_blank';
-                if (urlEl) urlEl.textContent = jumpUrl;
-                var rn = naturalRect();
-                var r1 = main.getBoundingClientRect();
-                var v = varsTo(rn,
-                    r1.left + r1.width / 2, r1.top + r1.height / 2,
-                    r1.width, r1.height);
-                setVars(v.mx, v.my, v.sx, v.sy); flush();
-                freeze(false);
-                morph.classList.add('show');
-                setVars(0, 0, 1, 1);
-                main.classList.remove('restoring');       /* 防止上次还原动画残留 */
-                main.classList.add('card-hide');
-                startCountdown();
-                setTimeout(function () { settled = false; }, SPRING_MS);
-            };
+                 jumpTarget = target || '_blank';
+                 if (urlEl) urlEl.textContent = jumpUrl;
+                 doOpenJump();
+             };
 
             window.closeJump = function () {
                 if (!morph.classList.contains('show') || settled) return;
